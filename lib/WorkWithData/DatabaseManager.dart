@@ -16,17 +16,18 @@ class DatabaseManager {
     String path = dir + '/Database.db';
     _db = await openDatabase(path, version: 1, onOpen: (db) {
     }, onCreate: (Database db, int version) async {
-      await db.execute("CREATE TABLE IF NOT EXISTS Deals ("
-          "id INT AUTO_INCREMENT PRIMARY KEY,"
-          "deal VARCHAR(200),"
-          "start DATETIME,"
-          "end DATETIME,"
-          "done BIT"
-          ")");
+      await db.execute("""CREATE TABLE IF NOT EXISTS Deals (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          deal VARCHAR(200),
+          start DATETIME,
+          end DATETIME,
+          done BIT
+          )""");
     });
   }
 
   static void addNote(Note note) {
+    // _db.insert('Deals', note.toJson());
     _db.execute("""INSERT INTO Deals (deal, start, end, done) VALUES (
         \"${note.deal}\", \"${Note.dateTimeToString(note.start)}\",
         \"${Note.dateTimeToString(note.end)}\", ${note.done ? 1 : 0})""");
