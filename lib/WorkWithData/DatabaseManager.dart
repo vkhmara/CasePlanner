@@ -1,4 +1,4 @@
-import 'Note.dart';
+import 'Deal.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseManager {
@@ -26,18 +26,24 @@ class DatabaseManager {
     });
   }
 
-  static void addNote(Note note) {
-    // _db.insert('Deals', note.toJson());
+  static void addNote(Deal note) {
     _db.execute("""INSERT INTO Deals (deal, start, end, done) VALUES (
-        \"${note.deal}\", \"${Note.dateTimeToString(note.start)}\",
-        \"${Note.dateTimeToString(note.end)}\", ${note.done ? 1 : 0})""");
+        \"${note.deal}\", \"${Deal.dateTimeToString(note.start)}\",
+        \"${Deal.dateTimeToString(note.end)}\", ${note.done ? 1 : 0})""");
   }
 
-  static void deleteNote(Note note) {
-    _db.execute("DELETE FROM Deals WHERE start=${Note.dateTimeToString(note.start)}");
+  static void deleteNote(Deal note) {
+    _db.execute("DELETE FROM Deals WHERE start=${Deal.dateTimeToString(note.start)}");
   }
 
-  static Future<List<Note>> downloadAll() async {
-    return (await _db.rawQuery("SELECT * FROM Deals")).map((e) => Note.fromJson(e)).toList();
+  static void updateDB(List<Deal> list) async {
+    await _db.execute('DELETE FROM Deals');
+    for (Deal deal in list) {
+      addNote(deal);
+    }
+  }
+
+  static Future<List<Deal>> downloadAll() async {
+    return (await _db.rawQuery("SELECT * FROM Deals")).map((e) => Deal.fromJson(e)).toList();
   }
 }

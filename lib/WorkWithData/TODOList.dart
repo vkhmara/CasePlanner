@@ -1,23 +1,25 @@
-import 'Note.dart';
-import 'package:case_planner/WorkWithData/DatabaseManager.dart';
+import 'package:case_planner/WorkWithData/AllDeals.dart';
+
+import 'Deal.dart';
 
 class TODOList {
-  static List<Note> _todoList = new List();
+  // TODO: remove all wrong notes from database
 
-  static Future<void> initList() async {
-    await updateList();
+  static List<Deal> _todoList = new List();
+
+  static void initList() async {
+    updateList();
   }
 
-  static void addNote(Note note) {
-    DatabaseManager.addNote(note);
+  static void addNote(Deal note) {
     _todoList.add(note);
   }
 
-  static Future<void> updateList() async {
-    _todoList = await DatabaseManager.downloadAll();
+  static void updateList() async {
+    _todoList = AllDeals.dealsOnDay();
   }
 
-  Note operator[](int index) {
+  static Deal at(int index) {
     return todoList[index];
   }
 
@@ -25,6 +27,6 @@ class TODOList {
     return _todoList.length;
   }
 
-  static List<Note> get todoList => _todoList;
+  static List<Deal> get todoList => _todoList;
 
 }
