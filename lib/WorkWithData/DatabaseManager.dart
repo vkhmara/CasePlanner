@@ -32,8 +32,8 @@ class DatabaseManager {
         \"${Deal.dateTimeToString(note.end)}\", ${note.done ? 1 : 0})""");
   }
 
-  static void deleteNote(Deal note) {
-    _db.execute("DELETE FROM Deals WHERE start=${Deal.dateTimeToString(note.start)}");
+  static Future<void> deleteNote(Deal note) async {
+    await _db.execute("DELETE FROM Deals WHERE start=\"${Deal.dateTimeToString(note.start)}\"");
   }
 
   static void updateDB(List<Deal> list) async {

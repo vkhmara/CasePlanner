@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:case_planner/CurrentDay/Prefs.dart';
 
+import 'WorkWithDateAndTime.dart';
+
 class Deal {
   String deal;
   DateTime start;
@@ -38,23 +40,19 @@ class Deal {
   }
 
   static String dateTimeToString(DateTime dt) {
-    return "${dt.year}-${_twoDigits(dt.month)}-${_twoDigits(dt.day)}T"
+    return "${dt.year}-${_twoDigits(dt.month)}-${_twoDigits(dt.day)} "
         "${_twoDigits(dt.hour)}:${_twoDigits(dt.minute)}:${_twoDigits(dt.second)}";
-  }
-
-  static bool _isLess(DateTime dt1, DateTime dt2) {
-    return dt1.compareTo(dt2) < 0;
   }
 
   bool validate() {
     if (Prefs.startDayHour < Prefs.endDayHour) {
       return start.day == end.day &&
           Prefs.startDayHour <= start.hour &&
-          _isLess(start, end) &&
+          WorkWithDateAndTime.isLess(start, end) &&
           end.hour <= Prefs.endDayHour &&
           deal.length <= 200 && deal.length > 0;
     }
-    return _isLess(start, end) && start.day + 1 >= end.day && (
+    return WorkWithDateAndTime.isLess(start, end) && start.day + 1 >= end.day && (
         (Prefs.startDayHour <= start.day && start.day <= 23) ||
             (0 <= start.day && start.day <= Prefs.endDayHour)) && (
             (Prefs.startDayHour <= end.day && end.day <= 23) ||

@@ -1,6 +1,8 @@
 import 'package:case_planner/Pages/AddNotePage.dart';
 import 'package:flutter/material.dart';
 
+import 'package:case_planner/PageNumber.dart';
+import 'SettingsPage.dart';
 import 'TODOListPage.dart';
 import 'TestPaintPage.dart';
 
@@ -8,18 +10,19 @@ class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
   final String title;
+  static const String route = '/homepage';
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> implements PageNumber {
 
-  int _currentIndex = 0;
   final List<Widget> _children = [
     TODOListContainer(),
     AddNotePage(),
     PaintPage(),
+    SettingsPage()
   ];
 
   @override
@@ -29,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title, style: TextStyle(color: Colors.pink)),
         backgroundColor: Colors.white,
       ),
-      body: _children[_currentIndex],
+      body: _children[PageNumber.currentPage],
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
@@ -42,15 +45,21 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.timer),
-            label: 'School',
+            label: 'Циферблат',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Настройки',
           ),
         ],
         onTap: (index) {
           setState(() {
-            _currentIndex = index;
+            PageNumber.currentPage = index;
           });
         },
-        currentIndex: _currentIndex,
+        currentIndex: PageNumber.currentPage,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black,
       ),
     );
   }

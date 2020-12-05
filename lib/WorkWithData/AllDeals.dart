@@ -1,5 +1,6 @@
 import 'package:case_planner/CurrentDay/Prefs.dart';
 
+import 'WorkWithDateAndTime.dart';
 import 'DatabaseManager.dart';
 import 'Deal.dart';
 
@@ -18,23 +19,20 @@ class AllDeals {
     _allDeals.add(note);
   }
 
-  static void deleteNote(Deal note) {
-    DatabaseManager.deleteNote(note);
+  static Future<void> deleteNote(Deal note) async {
+    await DatabaseManager.deleteNote(note);
     _allDeals.remove(note);
   }
 
-  static void deleteNoteAt(int pos) {
-    DatabaseManager.deleteNote(_allDeals[pos]);
+  static Future<void> deleteNoteAt(int pos) async {
+    await DatabaseManager.deleteNote(_allDeals[pos]);
     _allDeals.removeAt(pos);
-  }
-
-  static bool _isLess(DateTime dt1, DateTime dt2) {
-    return dt1.compareTo(dt2) < 0;
   }
 
   static List<Deal> dealsOnDay() {
     return _allDeals.where((element) =>
-    _isLess(Prefs.startDay, element.start) && _isLess(element.start, Prefs.endDay))
+    WorkWithDateAndTime.isLess(Prefs.startDay, element.start) &&
+        WorkWithDateAndTime.isLess(element.start, Prefs.endDay))
         .toList();
   }
 

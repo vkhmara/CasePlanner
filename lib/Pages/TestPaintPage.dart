@@ -1,10 +1,14 @@
 import 'dart:ui';
 
 import 'package:case_planner/WorkWithData/ClockFace.dart';
+import 'package:case_planner/WorkWithData/Deal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class PaintPage extends StatefulWidget {
+import '../PageNumber.dart';
+import '../Painters.dart';
+
+class PaintPage extends StatefulWidget implements PageNumber {
   @override
   _PaintPageState createState() => _PaintPageState();
 }
@@ -12,13 +16,69 @@ class PaintPage extends StatefulWidget {
 class _PaintPageState extends State<PaintPage> {
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.center,
-      child: CustomPaint(
-          size: Size(200.0, 300.0),
+    Deal deal = ClockFace.selectedDeal;
+    List<Widget> children = List();
+    if (deal != null) {
+      children.add(Container(
+        margin: EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+            border: Border.all(
+              color: const Color(0xFF0FF050),
+              width: 3.0,
+            ),
+            borderRadius: BorderRadius.all(Radius.circular(10.0))
+        ),
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text("Start: ${Deal.dateTimeToString(
+                  deal
+                      .start)}"),
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text("End: ${Deal.dateTimeToString(
+                  deal
+                      .end)}"),
+            ),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                    "${deal.deal}",
+                    style: TextStyle(color: Colors.red[500])
+                )
+            ),
+          ],
+        ),
+      ));
+    }
+    else {
+      children.add(Container());
+    }
+    PaintBackground painting = PaintBackground();
+    children.add(Align(
+      alignment: Alignment.bottomCenter,
+      child: GestureDetector(
+        child: CustomPaint(
+          size: Size(350.0, 300.0),
           painter: PaintBackground(),
-          foregroundPainter: PaintForeground()
+          foregroundPainter: PaintForeground(),
+        ),
+        onTapDown: (details) {
+          ClockFace.selectedPoint = details.localPosition;
+          setState(() {
+            ClockFace.handleTap(details.localPosition);
+          });
+          painting.shouldRepaint(null);
+        },
       ),
+    ));
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: children,
     );
   }
 
@@ -41,47 +101,4 @@ class _PaintPageState extends State<PaintPage> {
     ]);
     super.dispose();
   }
-}
-
-class PaintBackground extends CustomPainter {
-  Paint _blackPaint = Paint()
-  ..color = Colors.black
-  ..style = PaintingStyle.stroke
-  ..strokeWidth = 2.5;
-  Paint _redPaint = Paint()
-  ..color = Colors.red
-  ..style = PaintingStyle.stroke
-  ..strokeWidth = 3.0;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    _blackPaint = Paint()
-      ..color = Colors.blue
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.5;
-    _redPaint = Paint()
-      ..color = Colors.red
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 4.0;
-    ClockFace.changeA(13.0);
-    ClockFace.changeR0(52.0);
-    ClockFace.initClockFace();
-    canvas.drawPoints(PointMode.points, ClockFace.allPoints, _blackPaint);
-    canvas.drawPoints(PointMode.points, ClockFace.dealPoints, _redPaint);
-  }
-  bool shouldRepaint(PaintBackground old) => false;
-}/* MyPaintBottom */
-
-class PaintForeground extends CustomPainter {
-  void paint(Canvas canvas, Size size) {
-    // print('size $size');
-    // print('draw Circle red');
-    //
-    // canvas.drawCircle(new Offset(0, 0), 50.0, Paint()
-    //   ..color = Colors.red
-    //   ..style = PaintingStyle.stroke
-    //   ..strokeWidth = 5.0);
-  } // paint
-
-  bool shouldRepaint(PaintForeground old) => false;
 }

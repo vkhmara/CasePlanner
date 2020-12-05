@@ -1,4 +1,5 @@
 import 'package:case_planner/CurrentDay/Prefs.dart';
+import 'package:case_planner/Pages/TODOListPage.dart';
 import 'package:case_planner/WorkWithData/AllDeals.dart';
 import 'package:case_planner/WorkWithData/ClockFace.dart';
 import 'package:case_planner/WorkWithData/DatabaseManager.dart';
@@ -18,7 +19,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  static DateTime globalDay = DateTime.now();
+  String title;
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.cyan,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Планировщик дел'),//PaintPage(),
+      home: MyHomePage(title: '${Prefs.startDay.day}.${Prefs.startDay.month}'),
+      routes: {
+        TODOListContainer.route: (BuildContext context) => TODOListContainer(),
+        MyHomePage.route: (BuildContext context) => MyHomePage(title: '${Prefs.startDay.day}.${Prefs.startDay.month}'),
+      },
     );
   }
 }

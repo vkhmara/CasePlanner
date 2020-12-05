@@ -25,9 +25,10 @@ class Prefs {
   static void changeCurrentDay(DateTime newDay) {
     _currentDay = newDay;
     TODOList.updateList();
-    ClockFace.updateDay();
+    ClockFace.changeDay();
   }
 
+  /// [newDay] can be any. Only the date part is important
   static set _currentDay(DateTime newDay) {
     _startDay = newDay.subtract(
         Duration(
@@ -44,16 +45,21 @@ class Prefs {
     ));
   }
 
+  ///[newStartDayHour] and [newEndDayHour] must be from 0 till 23
   static void changeDayInterval(int newStartDayHour, int newEndDayHour) {
-    _startDay.add(Duration(hours: _startDayHour - newStartDayHour));
+    if (newStartDayHour < 0 || newStartDayHour > 23 ||
+        newEndDayHour < 0 || newEndDayHour > 23) {
+      return;
+    }
+    _startDay = _startDay.add(Duration(hours: _startDayHour - newStartDayHour));
     _startDayHour = newStartDayHour;
     _endDayHour = newEndDayHour;
     _endDay = _startDay;
-    _endDay.add(Duration( hours: _startDayHour < _endDayHour ?
+    _endDay = _endDay.add(Duration( hours: _startDayHour < _endDayHour ?
     _endDayHour - _startDayHour :
     _endDayHour - _startDayHour + 24));
     AllDeals.changeDayInterval();
     TODOList.updateList();
-    ClockFace.changeDayInterval();
+    ClockFace.updateAll();
   }
 }
