@@ -2,7 +2,7 @@ import 'package:case_planner/WorkWithData/AllDeals.dart';
 import 'package:case_planner/WorkWithData/ClockFace.dart';
 import 'package:case_planner/WorkWithData/TODOList.dart';
 
-class Prefs {
+class Settings {
   static int _startDayHour;
   static int _endDayHour;
   static DateTime _startDay;

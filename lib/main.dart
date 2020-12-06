@@ -1,4 +1,4 @@
-import 'package:case_planner/CurrentDay/Prefs.dart';
+import 'package:case_planner/Settings/Prefs.dart';
 import 'package:case_planner/Pages/TODOListPage.dart';
 import 'package:case_planner/WorkWithData/AllDeals.dart';
 import 'package:case_planner/WorkWithData/ClockFace.dart';
@@ -10,7 +10,7 @@ import 'WorkWithData/TODOList.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Prefs.initPrefs();
+  Settings.initPrefs();
   await DatabaseManager.initDB();
   await AllDeals.initList();
   TODOList.initList();
@@ -19,8 +19,6 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  String title;
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,10 +27,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.cyan,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: '${Prefs.startDay.day}.${Prefs.startDay.month}'),
+      home: MyHomePage(title: '${Settings.startDay.day}.${Settings.startDay.month}'),
       routes: {
         TODOListContainer.route: (BuildContext context) => TODOListContainer(),
-        MyHomePage.route: (BuildContext context) => MyHomePage(title: '${Prefs.startDay.day}.${Prefs.startDay.month}'),
+        MyHomePage.route: (BuildContext context) => MyHomePage(title: '${Settings.startDay.day}.${Settings.startDay.month}'),
       },
     );
   }

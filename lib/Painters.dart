@@ -1,9 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'CurrentDay/Prefs.dart';
+import 'Settings/Prefs.dart';
 import 'WorkWithData/ClockFace.dart';
 
 class PaintBackground extends CustomPainter {
@@ -35,20 +36,23 @@ class PaintBackground extends CustomPainter {
     // // To play with paint
     Offset center = Offset(size.width / 2, size.height / 2);
 
-    int hour = Prefs.startDayHour;
+    int hour = Settings.startDayHour;
     for (Offset point in ClockFace.hourLabels) {
       final TextPainter textPainter = TextPainter(
-          text: TextSpan(text: '$hour', style: style),
+          text: TextSpan(text: hour < 10 ? ' $hour' : '$hour', style: style),
           textAlign: TextAlign.center,
           textDirection: TextDirection.ltr
       )
         ..layout(maxWidth: size.width - 12.0 - 12.0);
       textPainter.paint(canvas, point);
-      hour++;
+      hour = (hour + 1) % 24;
     }
     canvas.drawPoints(PointMode.points, [ClockFace.selectedPoint, center], _greenPaint);
     canvas.drawPoints(PointMode.points, ClockFace.allPoints, _blackPaint);
     canvas.drawPoints(PointMode.points, ClockFace.dealPoints, _redPaint);
+    for (OffsetPair pair in ClockFace.hatches) {
+      canvas.drawLine(pair.local, pair.global, _blackPaint);
+    }
   }
   bool shouldRepaint(PaintBackground old) => true;
 }

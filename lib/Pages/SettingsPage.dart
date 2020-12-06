@@ -1,10 +1,6 @@
-import 'package:case_planner/CurrentDay/Prefs.dart';
+import 'package:case_planner/Settings/Prefs.dart';
 import 'package:case_planner/InputDateTimeField.dart';
 import 'package:case_planner/PageNumber.dart';
-import 'package:case_planner/WorkWithData/AllDeals.dart';
-import 'package:case_planner/WorkWithData/ClockFace.dart';
-import 'package:case_planner/WorkWithData/Deal.dart';
-import 'package:case_planner/WorkWithData/TODOList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +16,7 @@ class _SettingsPageState extends State<SettingsPage> implements PageNumber {
   static TextEditingController _inputEndHour = TextEditingController();
   static DateTime date = DateTime.now();
   static bool isException = false;
-  static String errorException = 'Sosi hui exception';
+  static String errorException = 'exception';
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -63,11 +59,11 @@ class _SettingsPageState extends State<SettingsPage> implements PageNumber {
             try {
               int startDayHour = int.parse(_inputStartHour.text);
               int endDayHour = int.parse(_inputEndHour.text);
-              Prefs.changeDayInterval(startDayHour, endDayHour);
+              Settings.changeDayInterval(startDayHour, endDayHour);
             }
             catch (e) {
             }
-            Prefs.changeCurrentDay(date);
+            Settings.changeCurrentDay(date);
             setState(() {
               isException = false;
               Navigator.pushReplacementNamed(context, MyHomePage.route);

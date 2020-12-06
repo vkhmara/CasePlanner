@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:case_planner/CurrentDay/Prefs.dart';
+import 'package:case_planner/Settings/Prefs.dart';
 
 import 'WorkWithDateAndTime.dart';
 
@@ -45,18 +45,18 @@ class Deal {
   }
 
   bool validate() {
-    if (Prefs.startDayHour < Prefs.endDayHour) {
+    if (Settings.startDayHour < Settings.endDayHour) {
       return start.day == end.day &&
-          Prefs.startDayHour <= start.hour &&
-          WorkWithDateAndTime.isLess(start, end) &&
-          end.hour <= Prefs.endDayHour &&
+          Settings.startDayHour <= start.hour &&
+          DateTimeUtility.isLess(start, end) &&
+          end.hour <= Settings.endDayHour &&
           deal.length <= 200 && deal.length > 0;
     }
-    return WorkWithDateAndTime.isLess(start, end) && start.day + 1 >= end.day && (
-        (Prefs.startDayHour <= start.day && start.day <= 23) ||
-            (0 <= start.day && start.day <= Prefs.endDayHour)) && (
-            (Prefs.startDayHour <= end.day && end.day <= 23) ||
-                (0 <= end.day && end.day <= Prefs.endDayHour)) &&
+    return DateTimeUtility.isLess(start, end) && start.day + 1 >= end.day && (
+        (Settings.startDayHour <= start.day && start.day <= 23) ||
+            (0 <= start.day && start.day <= Settings.endDayHour)) && (
+            (Settings.startDayHour <= end.day && end.day <= 23) ||
+                (0 <= end.day && end.day <= Settings.endDayHour)) &&
         deal.length <= 200 && deal.length > 0;
 
   }

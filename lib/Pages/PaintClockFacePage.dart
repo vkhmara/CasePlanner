@@ -8,12 +8,12 @@ import 'package:flutter/services.dart';
 import '../PageNumber.dart';
 import '../Painters.dart';
 
-class PaintPage extends StatefulWidget implements PageNumber {
+class PaintClockFacePage extends StatefulWidget implements PageNumber {
   @override
-  _PaintPageState createState() => _PaintPageState();
+  _PaintClockFacePageState createState() => _PaintClockFacePageState();
 }
 
-class _PaintPageState extends State<PaintPage> {
+class _PaintClockFacePageState extends State<PaintClockFacePage> {
   @override
   Widget build(BuildContext context) {
     Deal deal = ClockFace.selectedDeal;
@@ -62,7 +62,7 @@ class _PaintPageState extends State<PaintPage> {
       alignment: Alignment.bottomCenter,
       child: GestureDetector(
         child: CustomPaint(
-          size: Size(350.0, 300.0),
+          size: Size(350.0, 350.0),
           painter: PaintBackground(),
           foregroundPainter: PaintForeground(),
         ),

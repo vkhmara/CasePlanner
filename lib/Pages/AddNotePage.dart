@@ -1,9 +1,11 @@
+import 'package:case_planner/Settings/Prefs.dart';
 import 'package:case_planner/InputDateTimeField.dart';
 import 'package:case_planner/PageNumber.dart';
 import 'package:case_planner/WorkWithData/AllDeals.dart';
 import 'package:case_planner/WorkWithData/Deal.dart';
 import 'package:case_planner/WorkWithData/TODOList.dart';
 import 'package:case_planner/WorkWithData/ClockFace.dart';
+import 'package:case_planner/WorkWithData/WorkWithDateAndTime.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -41,15 +43,15 @@ class _AddNotePageState extends State<AddNotePage> implements PageNumber {
   @override
   Widget build(BuildContext context) {
     if (startDate == null) {
-      startDate = DateTime.now();
-      startTime = TimeOfDay.now();
-      endDate = DateTime.now();
-      endTime = TimeOfDay.now();
+      startDate = Settings.startDay;
+      startTime = DateTimeUtility.timeFromHour(Settings.startDayHour);
+      endDate = Settings.endDay;
+      endTime = DateTimeUtility.timeFromHour(Settings.endDayHour);
     }
     return Column(
       children: [
         DateTimePicker(
-          labelText: 'Start',
+          labelText: 'Начало',
           selectedDate: startDate,
           selectedTime: startTime,
           selectDate: (value) {
@@ -64,7 +66,7 @@ class _AddNotePageState extends State<AddNotePage> implements PageNumber {
           },
         ),
         DateTimePicker(
-          labelText: 'End',
+          labelText: 'Конец',
           selectedDate: endDate,
           selectedTime: endTime,
           selectDate: (value) {
@@ -109,7 +111,7 @@ class _AddNotePageState extends State<AddNotePage> implements PageNumber {
                 });
                 return;
               }
-              if (!TODOList.isNoteCompatible(note)) {
+              if (!AllDeals.isNoteCompatible(note)) {
                 setState(() {
                   errorMessage = 'Несовместно с другими делами';
                 });

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:case_planner/PageNumber.dart';
 import 'SettingsPage.dart';
 import 'TODOListPage.dart';
-import 'TestPaintPage.dart';
+import 'PaintClockFacePage.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -21,7 +21,7 @@ class _MyHomePageState extends State<MyHomePage> implements PageNumber {
   final List<Widget> _children = [
     TODOListContainer(),
     AddNotePage(),
-    PaintPage(),
+    PaintClockFacePage(),
     SettingsPage()
   ];
 

@@ -1,4 +1,4 @@
-import 'package:case_planner/CurrentDay/Prefs.dart';
+import 'package:case_planner/Settings/Prefs.dart';
 
 import 'WorkWithDateAndTime.dart';
 import 'DatabaseManager.dart';
@@ -29,10 +29,17 @@ class AllDeals {
     _allDeals.removeAt(pos);
   }
 
+  static bool isNoteCompatible(Deal deal) {
+    return _allDeals.every((element) => (
+        DateTimeUtility.isLessOrEqual(deal.end, element.start) ||
+            DateTimeUtility.isLessOrEqual(element.end, deal.start)
+    ));
+  }
+
   static List<Deal> dealsOnDay() {
     return _allDeals.where((element) =>
-    WorkWithDateAndTime.isLess(Prefs.startDay, element.start) &&
-        WorkWithDateAndTime.isLess(element.start, Prefs.endDay))
+    DateTimeUtility.isLessOrEqual(Settings.startDay, element.start) &&
+        DateTimeUtility.isLessOrEqual(element.start, Settings.endDay))
         .toList();
   }
 
