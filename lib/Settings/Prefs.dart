@@ -1,12 +1,14 @@
 import 'package:case_planner/WorkWithData/AllDeals.dart';
 import 'package:case_planner/WorkWithData/ClockFace.dart';
 import 'package:case_planner/WorkWithData/TODOList.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings {
   static int _startDayHour;
   static int _endDayHour;
   static DateTime _startDay;
   static DateTime _endDay;
+  static SharedPreferences _prefs;
 
   static int get startDayHour => _startDayHour;
 
@@ -16,10 +18,16 @@ class Settings {
 
   static DateTime get endDay => _endDay;
 
-  static void initPrefs() {
-    _startDayHour = 9;
-    _endDayHour = 23;
+  // You can show start menu where the user will input the day interval
+  static Future<bool> initSettings() async {
+    _prefs = await SharedPreferences.getInstance();
+    if (!_prefs.getKeys().contains('startDayHour')) {
+      return false;
+    }
+    _startDayHour = _prefs.getInt('startDayHour');
+    _endDayHour = _prefs.getInt('endDayHour');
     _currentDay = DateTime.now();
+    return true;
   }
 
   static void changeCurrentDay(DateTime newDay) {
@@ -51,6 +59,7 @@ class Settings {
         newEndDayHour < 0 || newEndDayHour > 23) {
       return;
     }
+
     _startDay = _startDay.add(Duration(hours: _startDayHour - newStartDayHour));
     _startDayHour = newStartDayHour;
     _endDayHour = newEndDayHour;
@@ -58,6 +67,9 @@ class Settings {
     _endDay = _endDay.add(Duration( hours: _startDayHour < _endDayHour ?
     _endDayHour - _startDayHour :
     _endDayHour - _startDayHour + 24));
+
+    _prefs.setInt('startDayHour', _startDayHour);
+    _prefs.setInt('endDayHour', _endDayHour);
     AllDeals.changeDayInterval();
     TODOList.updateList();
     ClockFace.updateAll();
