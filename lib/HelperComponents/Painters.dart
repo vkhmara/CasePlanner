@@ -4,27 +4,30 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'Settings/Prefs.dart';
-import 'WorkWithData/ClockFace.dart';
+import '../Settings/Settings.dart';
+import '../WorkWithData/ClockFace.dart';
 
 class PaintBackground extends CustomPainter {
-  final Paint _blackPaint = Paint()
+  final Paint _clockfaceLinePaint = Paint()
     ..color = Colors.black
     ..style = PaintingStyle.stroke
-    ..strokeWidth = 3.5;
-  final Paint _greenPaint = Paint()
-    ..color = Colors.green
+    ..strokeWidth = 2.5;
+  final Paint _hatchesPaint = Paint()
+    ..color = Colors.black
     ..style = PaintingStyle.stroke
-    ..strokeWidth = 6.5;
-  final Paint _redPaint = Paint()
+    ..strokeWidth = 2.5;
+  final Paint _dealLinePaint = Paint()
     ..color = Colors.red
     ..style = PaintingStyle.stroke
     ..strokeWidth = 4.0;
+  final Paint _selectedDealLinePaint = Paint()
+    ..color = Colors.pink
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 5.0;
   final TextStyle style = TextStyle(
     color: Colors.black,
     decorationStyle: TextDecorationStyle.solid,
     decorationThickness: 0.1,
-    fontFamily: 'RobotoMono',
   );
 
   @override
@@ -34,7 +37,6 @@ class PaintBackground extends CustomPainter {
     // ClockFace.a = 10.0;
     // ClockFace.r0 = 42.0;
     // // To play with paint
-    Offset center = Offset(size.width / 2, size.height / 2);
 
     int hour = Settings.startDayHour;
     for (Offset point in ClockFace.hourLabels) {
@@ -47,12 +49,12 @@ class PaintBackground extends CustomPainter {
       textPainter.paint(canvas, point);
       hour = (hour + 1) % 24;
     }
-    canvas.drawPoints(PointMode.points, [ClockFace.selectedPoint, center], _greenPaint);
-    canvas.drawPoints(PointMode.points, ClockFace.allPoints, _blackPaint);
-    canvas.drawPoints(PointMode.points, ClockFace.dealPoints, _redPaint);
+    canvas.drawPoints(PointMode.points, ClockFace.allPoints, _clockfaceLinePaint);
+    canvas.drawPoints(PointMode.points, ClockFace.dealPoints, _dealLinePaint);
     for (OffsetPair pair in ClockFace.hatches) {
-      canvas.drawLine(pair.local, pair.global, _blackPaint);
+      canvas.drawLine(pair.local, pair.global, _hatchesPaint);
     }
+    canvas.drawPoints(PointMode.points, ClockFace.selectedPoints, _selectedDealLinePaint);
   }
   bool shouldRepaint(PaintBackground old) => true;
 }

@@ -1,22 +1,33 @@
 import 'package:case_planner/WorkWithData/AllDeals.dart';
 import 'package:case_planner/WorkWithData/ClockFace.dart';
-import 'package:case_planner/WorkWithData/Deal.dart';
 import 'package:case_planner/WorkWithData/TODOList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../PageNumber.dart';
+import '../HelperComponents/DealContainer.dart';
 
 
-class TODOListContainer extends StatefulWidget {
+class TODOListPage extends StatefulWidget {
   static const String route = '/TODOList';
   @override
-  _TODOListContainerState createState() => _TODOListContainerState();
+  _TODOListPageState createState() => _TODOListPageState();
 }
 
-class _TODOListContainerState extends State<TODOListContainer> implements PageNumber {
+class _TODOListPageState extends State<TODOListPage> {
   @override
   Widget build(BuildContext context) {
+    if (TODOList.count == 0) {
+      return Column(
+          children: [
+            Expanded(
+              child: Container(
+                alignment: Alignment.center,
+                child: Text('На текущий день ничего не запланировано'),
+              ),
+            ),
+          ]
+      );
+    }
     return Column(
         children: [
           Expanded(
@@ -24,47 +35,68 @@ class _TODOListContainerState extends State<TODOListContainer> implements PageNu
               itemCount: TODOList.count,
               itemBuilder: (context, pos) =>
                   GestureDetector(
-                    child: Container(
-                      margin: EdgeInsets.all(8.0),
-                      padding: EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color(0xFF0FF050),
-                            width: 3.0,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(10.0))
-                      ),
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("Начало: ${Deal.dateTimeToString(
-                                TODOList
-                                    .at(pos)
-                                    .start)}"),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("Конец: ${Deal.dateTimeToString(
-                                TODOList
-                                    .at(pos)
-                                    .end)}"),
-                          ),
-                          Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                  "${TODOList.at(pos).deal}",
-                                  style: TextStyle(color: Colors.red[500])
-                              )
-                          ),
-                        ],
-                      ),
-                    ),
-                    onDoubleTap: () {
-                      setState(() {
-                        AllDeals.deleteNote(TODOList.at(pos));
-                        TODOList.updateList();
-                        ClockFace.updateDealPoints();
+                    child: DealContainer(dealPos: pos),
+                    onLongPressStart: (details) {
+                      showDialog(context: context,
+                          builder: (BuildContext buildContext) {
+                            return Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(5.0),
+                                    color: Colors.white,
+                                    alignment: Alignment.center,
+                                    child: Text('Вы уверены, что хотите удалить запись?',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14.0,
+                                    ))
+                                  ),
+                                  Container(
+                                    color: Colors.white,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: RaisedButton(
+                                              onPressed: () {
+                                                Navigator.pop(buildContext, true);
+                                              },
+                                              child: Text('Да'),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: RaisedButton(
+                                              onPressed: () {
+                                                Navigator.pop(buildContext, false);
+                                              },
+                                              child: Text('Нет'),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).
+                      then((toDelete) {
+                        if (toDelete == null || !toDelete) {
+                          return;
+                        }
+                        setState(() {
+                          AllDeals.deleteDeal(TODOList.at(pos));
+                          TODOList.deleteDealAt(pos);
+                          ClockFace.updateDealPoints();
+                        });
                       });
                     },
                   ),
@@ -72,5 +104,17 @@ class _TODOListContainerState extends State<TODOListContainer> implements PageNu
           ),
         ]
     );
+  }
+
+  @override
+  void dispose() {
+    print('dispose TODOListPage');
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    print('init TODOListPage');
   }
 }

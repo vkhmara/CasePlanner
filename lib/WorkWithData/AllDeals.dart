@@ -1,35 +1,49 @@
-import 'package:case_planner/Settings/Prefs.dart';
+import 'package:case_planner/Settings/Settings.dart';
 
-import 'WorkWithDateAndTime.dart';
+import 'DateTimeUtility.dart';
 import 'DatabaseManager.dart';
 import 'Deal.dart';
 
 class AllDeals {
-  // TODO: edit deals
+
   static List<Deal> _allDeals = new List();
 
   static Future<void> initList() async {
     _allDeals = await DatabaseManager.downloadAll();
-    changeDayInterval();
-    print(count);
+    _allDeals.removeWhere((element) => !element.validate());
+    DatabaseManager.updateDB(_allDeals);
   }
 
-  static void addNote(Deal note) {
-    DatabaseManager.addNote(note);
+  static Future<void> addDeal(Deal note) async {
+    await DatabaseManager.addDeal(note);
     _allDeals.add(note);
   }
 
-  static Future<void> deleteNote(Deal note) async {
-    await DatabaseManager.deleteNote(note);
-    _allDeals.remove(note);
+  static Future<bool> editDeal(Deal oldDeal, Deal newDeal) async {
+    if (!_allDeals.contains(oldDeal)|| !newDeal.validate()) {
+      return false;
+    }
+    _allDeals.remove(oldDeal);
+    if (!isDealCompatible(newDeal)) {
+      _allDeals.add(oldDeal);
+      return false;
+    }
+    _allDeals.add(newDeal);
+    await DatabaseManager.editDeal(oldDeal, newDeal);
+    return true;
   }
 
-  static Future<void> deleteNoteAt(int pos) async {
-    await DatabaseManager.deleteNote(_allDeals[pos]);
+  static Future<void> deleteDeal(Deal deal) async {
+    await DatabaseManager.deleteDeal(deal);
+    _allDeals.remove(deal);
+  }
+
+  static Future<void> deleteDealAt(int pos) async {
+    await DatabaseManager.deleteDeal(_allDeals[pos]);
     _allDeals.removeAt(pos);
   }
 
-  static bool isNoteCompatible(Deal deal) {
+  static bool isDealCompatible(Deal deal) {
     return _allDeals.every((element) => (
         DateTimeUtility.isLessOrEqual(deal.end, element.start) ||
             DateTimeUtility.isLessOrEqual(element.end, deal.start)

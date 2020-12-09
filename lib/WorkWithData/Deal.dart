@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:case_planner/Settings/Prefs.dart';
+import 'package:case_planner/Settings/Settings.dart';
 
-import 'WorkWithDateAndTime.dart';
+import 'DateTimeUtility.dart';
 
 class Deal {
   String deal;
@@ -44,20 +44,25 @@ class Deal {
         "${_twoDigits(dt.hour)}:${_twoDigits(dt.minute)}:${_twoDigits(dt.second)}";
   }
 
-  bool validate() {
-    if (Settings.startDayHour < Settings.endDayHour) {
-      return start.day == end.day &&
-          Settings.startDayHour <= start.hour &&
-          DateTimeUtility.isLess(start, end) &&
-          end.hour <= Settings.endDayHour &&
-          deal.length <= 200 && deal.length > 0;
-    }
-    return DateTimeUtility.isLess(start, end) && start.day + 1 >= end.day && (
-        (Settings.startDayHour <= start.day && start.day <= 23) ||
-            (0 <= start.day && start.day <= Settings.endDayHour)) && (
-            (Settings.startDayHour <= end.day && end.day <= 23) ||
-                (0 <= end.day && end.day <= Settings.endDayHour)) &&
-        deal.length <= 200 && deal.length > 0;
+  bool _isInDay(DateTime currentStartDay, DateTime currentEndDay) {
+    return DateTimeUtility.isLess(start, end) &&
+        DateTimeUtility.isLessOrEqual(currentStartDay, start) &&
+        DateTimeUtility.isLessOrEqual(start, currentEndDay) &&
+        DateTimeUtility.isLessOrEqual(currentStartDay, end) &&
+        DateTimeUtility.isLessOrEqual(end, currentEndDay);
+  }
 
+  bool validate() {
+    DateTime currentStartDay = DateTimeUtility
+        .withoutTime(start)
+        .add(Duration(hours: Settings.startDayHour));
+    DateTime currentEndDay = currentStartDay.add(Duration(hours:
+    (Settings.endDayHour - Settings.startDayHour) <= 0 ?
+    (Settings.endDayHour - Settings.startDayHour) + 24 :
+    Settings.endDayHour - Settings.startDayHour));
+    return (_isInDay(currentStartDay, currentEndDay) ||
+    _isInDay(currentStartDay.subtract(Duration(days: 1)),
+        currentEndDay.subtract(Duration(days: 1)))) //in case incorrect detecting day
+        && deal.length <= 200 && deal.length > 0;
   }
 }

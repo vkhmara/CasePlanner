@@ -1,38 +1,72 @@
-import 'package:case_planner/Pages/AddNotePage.dart';
+import 'package:case_planner/Pages/AddDealPage.dart';
+import 'package:case_planner/Settings/Settings.dart';
+import 'package:case_planner/WorkWithData/DateTimeUtility.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:case_planner/PageNumber.dart';
+import 'package:flutter/services.dart';
 import 'SettingsPage.dart';
 import 'TODOListPage.dart';
-import 'PaintClockFacePage.dart';
+import 'ClockFacePage.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key key}) : super(key: key);
 
-  final String title;
   static const String route = '/homepage';
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> implements PageNumber {
-
-  final List<Widget> _children = [
-    TODOListContainer(),
-    AddNotePage(),
-    PaintClockFacePage(),
-    SettingsPage()
-  ];
+class _MyHomePageState extends State<MyHomePage> {
+  String title = 'Текущий день ' + DateTimeUtility.dateAsString(Settings.startDay);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title, style: TextStyle(color: Colors.pink)),
-        backgroundColor: Colors.white,
+        title: Align(
+          child: Text(
+              title,
+              style: TextStyle(color: Colors.black)
+          ),
+          alignment: Alignment.center,
+        ),
+        backgroundColor: Color(0xC0F0F0F0),
       ),
-      body: _children[PageNumber.currentPage],
+      body: Column(
+        children: [
+          Expanded(
+              child: ((pageNumber) {
+                switch (Settings.currentPage) {
+                  case 0:
+                    return TODOListPage();
+                  case 1:
+                    return AddDealPage(() {
+                      setState(() {
+                        Settings.currentPage = 0;
+                      });
+                    });
+                  case 2:
+                    return ClockFacePage();
+                  case 3:
+                    return SettingsPage(() {
+                      setState(() {
+                        Settings.currentPage = 0;
+                      });
+                    },() {
+                      setState(() {
+                        title = 'Текущий день ' + DateTimeUtility.dateAsString(Settings.startDay);
+                      });
+                    });
+                  default:
+                    return null;
+                }
+              })(Settings.currentPage),
+          ),
+        ],
+      ),
+      backgroundColor: Color(0xF0CAD9D9),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
@@ -41,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> implements PageNumber {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add),
-            label: 'Создать',
+            label: 'Добавить',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.timer),
@@ -54,13 +88,38 @@ class _MyHomePageState extends State<MyHomePage> implements PageNumber {
         ],
         onTap: (index) {
           setState(() {
-            PageNumber.currentPage = index;
+            Settings.currentPage = index;
           });
         },
-        currentIndex: PageNumber.currentPage,
+        currentIndex: Settings.currentPage,
         selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black,
+        unselectedItemColor: Color(0xFF303030),
+        backgroundColor: Color(0xFFFFFFFF),
       ),
     );
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    Settings.clearAllInputData();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    print('initState HomePage');
+  }
+
+  @override
+  void dispose() {
+    print('dispose HomePage');
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
   }
 }

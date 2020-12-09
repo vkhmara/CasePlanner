@@ -1,12 +1,12 @@
 import 'dart:math';
 
-import 'package:case_planner/Settings/Prefs.dart';
+import 'package:case_planner/Settings/Settings.dart';
 import 'package:case_planner/WorkWithData/Deal.dart';
 import 'package:case_planner/WorkWithData/TODOList.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'WorkWithDateAndTime.dart';
+import 'DateTimeUtility.dart';
 
 class ClockFace {
   // Hours from 0 till 23
@@ -24,8 +24,9 @@ class ClockFace {
   static Offset selectedPoint = Offset(0, 0);
   static List<Offset> _selectedPoints = List();
   static bool _selected = false;
+  ///TODO: remove this shit
   static TimeOfDay currentTime = TimeOfDay(hour: 0, minute: 0);
-  static double borderDist = 15.0;
+  static double _borderDist = 25.0;
 
   static void initClockFace() {
     updateAllPoints();
@@ -80,9 +81,6 @@ class ClockFace {
   static void updateAllPoints() {
     _allPoints = List();
     _phi0 = -pi / 2 + pi / 6 * Settings.endDayHour;
-    if (_phi0 < 2 * pi - pi / 2) {
-      _phi0 += 2 * pi;
-    }
     double lowerPhi = Settings.startDayHour == Settings.endDayHour ?
     _phi0 - 4 * pi :
     angleOfTime(TimeOfDay(hour: Settings.startDayHour, minute: 0));
@@ -105,8 +103,8 @@ class ClockFace {
     int hour = Settings.startDayHour;
     for ( int i = 0; i <= len; i++, hour = (hour + 1) % 24) {
       double phi = angleOfTime(TimeOfDay(hour: hour, minute: 0));
-      if (i == 24) {
-        phi += 4 * pi;
+      if (len == 24 && i == 0) {
+        phi -= 4 * pi;
       }
       _hourLabels.add(Offset(
           _center.x + r(phi, offset: offRadius) * cos(phi) +
@@ -123,14 +121,21 @@ class ClockFace {
     updateHatches();
   }
 
+  // works on shift from endDayHour
   static double angleOfTime(TimeOfDay tod) {
     int hours = (Settings.endDayHour - tod.hour) % 24;
-    return _phi0 - (hours * 60 + tod.minute) * _anglePerMinute;
+    return _phi0 - (hours * 60 - tod.minute) * _anglePerMinute;
   }
 
   static List<Offset> _getPointsOnCurve(TimeOfDay tod1, TimeOfDay tod2) {
     List<Offset> list = List();
-    for (double phi = angleOfTime(tod1); phi <= angleOfTime(tod2);
+    double startAngle = angleOfTime(tod1);
+    if (Settings.startDayHour == Settings.endDayHour &&
+    tod1.hour == Settings.startDayHour) {
+      startAngle -= 4 * pi;
+    }
+    double endAngle = angleOfTime(tod2);
+    for (double phi = startAngle; phi <= endAngle;
     phi += _anglePerMinute) {
       list.add(Offset(_center.x + r(phi) * cos(phi),
           _center.y + r(phi) * sin(phi)));
@@ -150,26 +155,36 @@ class ClockFace {
     Point rad = Point(tapPoint.dx, tapPoint.dy) - _center;
     double magn = rad.magnitude;
     double phi = atan2(rad.y, rad.x);
-    if (phi < -pi / 2) {
-      phi += 2 * pi;
+    phi += 6 * pi; // to make it above _phi0
+    while (phi >= _phi0) {
+      phi -= 2 * pi;
     }
-    for (int i = 0; i < 2; i++, phi += 2 * pi) {
-      if ((magn - r(phi)).abs() < borderDist) {
-        double minutes = (phi + pi / 2) / _anglePerMinute;
-        TimeOfDay tod = TimeOfDay(
-            hour: (minutes / 60).floor(), minute: minutes.floor() % 60);
+    while (phi >= _phi0 - 4 * pi) {
+      if ((magn - r(phi)).abs() < _borderDist) {
+        double minutes = (_phi0 - phi) / _anglePerMinute;
+        print(minutes);
+        TimeOfDay diff = DateTimeUtility.fromMinutes(minutes.floor());
+        TimeOfDay tod = TimeOfDay.fromDateTime(
+            Settings.endDay.subtract(Duration(
+                hours: diff.hour,
+                minutes: diff.minute
+            ))
+        );
         currentTime = tod;
         for (Deal deal in TODOList.todoList) {
-          if (DateTimeUtility.isTimeBetween(tod, TimeOfDay.fromDateTime(deal.start),
+          if (DateTimeUtility.isTimeBetween(
+              tod, TimeOfDay.fromDateTime(deal.start),
               TimeOfDay.fromDateTime(deal.end))) {
             _selected = true;
-            _selectedPoints = _getPointsOnCurve(TimeOfDay.fromDateTime(deal.start),
-                TimeOfDay.fromDateTime(deal.end));
+            _selectedPoints =
+                _getPointsOnCurve(TimeOfDay.fromDateTime(deal.start),
+                    TimeOfDay.fromDateTime(deal.end));
             _selectedDeal = deal;
             return;
           }
         }
       }
+      phi -= 2 * pi;
     }
     _selected = false;
   }
@@ -181,7 +196,7 @@ class ClockFace {
   static List<Offset> get hourLabels => _hourLabels;
 
   static List<Offset> get selectedPoints =>
-      _selected ? _selectedPoints : null;
+      _selected ? _selectedPoints : List();
 
   static set r0(double value) {
     _r0 = value;
