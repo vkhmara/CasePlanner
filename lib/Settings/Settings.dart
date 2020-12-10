@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:case_planner/WorkWithData/AllDeals.dart';
 import 'package:case_planner/WorkWithData/ClockFace.dart';
 import 'package:case_planner/WorkWithData/DateTimeUtility.dart';
@@ -10,10 +12,12 @@ class Settings {
   static int _endDayHour;
   static DateTime _startDay;
   static DateTime _endDay;
+  static DateTime _minimStartDay;
+  static DateTime _minimEndDay;
   static int currentPage = 0;
   static SharedPreferences _prefs;
 
-  // You can show start menu where the user will input the day interval
+
   static Future<bool> initSettings() async {
     _prefs = await SharedPreferences.getInstance();
     if (!_prefs.getKeys().contains('startDayHour')) {
@@ -21,9 +25,28 @@ class Settings {
     }
     _startDayHour = _prefs.getInt('startDayHour');
     _endDayHour = _prefs.getInt('endDayHour');
-    _currentDay = DateTime.now()
-        .subtract(Duration(hours: _startDayHour));
+
+    initMinimDates();
+
+    _startDay = _minimStartDay;
+    _endDay = _minimEndDay;
     return true;
+  }
+
+  static void initMinimDates() {
+    DateTime now = DateTime.now();
+    _minimStartDay = DateTimeUtility
+        .withoutTime(now)
+        .add(Duration(hours: _startDayHour));
+    _minimEndDay = _minimStartDay.add(Duration(
+        hours: _startDayHour < _endDayHour ?
+        _endDayHour - _startDayHour :
+        _endDayHour - _startDayHour + 24
+    ));
+    if (now.isBefore(_minimStartDay)) {
+      _minimStartDay = _minimStartDay.subtract(Duration(days: 1));
+      _minimEndDay = _minimEndDay.subtract(Duration(days: 1));
+    }
   }
 
   static void changeCurrentDay(DateTime newDay) {
@@ -31,7 +54,10 @@ class Settings {
     _updateInputFields();
     TODOList.updateList();
     ClockFace.changeDay();
+    log('current day changed');
   }
+
+  static DateTime get minimStartDay => _minimStartDay;
 
   /// [newDay] can be any. Only the date part is important
   static set _currentDay(DateTime newDay) {
@@ -51,21 +77,20 @@ class Settings {
         newEndDayHour < 0 || newEndDayHour > 23) {
       return;
     }
-
-    _startDay = _startDay.add(Duration(hours: newStartDayHour - _startDayHour));
     _startDayHour = newStartDayHour;
     _endDayHour = newEndDayHour;
-    _endDay = _startDay;
-    _endDay = _endDay.add(Duration( hours: _startDayHour < _endDayHour ?
-    _endDayHour - _startDayHour :
-    _endDayHour - _startDayHour + 24));
-
     _prefs.setInt('startDayHour', _startDayHour);
     _prefs.setInt('endDayHour', _endDayHour);
+
+    initMinimDates();
+    _startDay = _minimStartDay;
+    _endDay = _minimEndDay;
+
     _updateInputFields();
     AllDeals.changeDayInterval();
     TODOList.updateList();
     ClockFace.updateAll();
+    log('day interval changed');
   }
 
   static void _updateInputFields() {
@@ -81,6 +106,7 @@ class Settings {
     await _prefs.remove('inputStartTime');
     await _prefs.remove('inputEndTime');
     await _prefs.remove('inputDeal');
+    log('all input data disposed');
   }
 
   static int get startDayHour => _startDayHour;
@@ -102,7 +128,7 @@ class Settings {
   }
 
   static TimeOfDay get inputStartTime {
-    return _prefs.containsKey('inputStartTime')?
+    return _prefs.containsKey('inputStartTime') ?
     DateTimeUtility.fromMinutes(_prefs.getInt('inputStartTime')) :
     TimeOfDay(hour:startDayHour, minute: 0);
   }
@@ -112,7 +138,7 @@ class Settings {
   }
 
   static TimeOfDay get inputEndTime {
-    return _prefs.containsKey('inputEndTime')?
+    return _prefs.containsKey('inputEndTime') ?
     DateTimeUtility.fromMinutes(_prefs.getInt('inputEndTime')) :
     TimeOfDay(hour:endDayHour, minute: 0);
   }
@@ -132,11 +158,13 @@ class Settings {
   }
 
   static String get inputDeal {
-    return _prefs.containsKey('inputDeal')?
+    return _prefs.containsKey('inputDeal') ?
     _prefs.getString('inputDeal') : '';
   }
 
   static set inputDeal(String value) {
     _prefs.setString('inputDeal', value);
   }
+
+  static DateTime get minimEndDay => _minimEndDay;
 }

@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:case_planner/HelperComponents/MenuPoint.dart';
+import 'package:case_planner/Pages/AboutProgramPage.dart';
 import 'package:case_planner/Settings/Settings.dart';
 import 'package:case_planner/HelperComponents/InputDateTimeField.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,7 +20,7 @@ class SettingsPage extends StatefulWidget{
 class _SettingsPageState extends State<SettingsPage>{
   TextEditingController _inputStartHour = TextEditingController();
   TextEditingController _inputEndHour = TextEditingController();
-  static DateTime date = DateTime.now();
+  static DateTime date = Settings.minimStartDay;
   static bool _changeDayTapped = false;
   static bool _changeIntervalTapped = false;
   static Size _screenSize;
@@ -28,42 +32,15 @@ class _SettingsPageState extends State<SettingsPage>{
       _screenSize = MediaQuery.of(context).size;
     }
     List<Widget> list = [
-      GestureDetector(
-        child: Container(
-          decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: Color(0x20000000),
-                ),
-                bottom: BorderSide(
-                  color: Color(0x20000000),
-                ),
-              )
-          ),
-          margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-          child: Row(
-            children: [
-              Container(
-                margin: EdgeInsets.all(20.0),
-                child: Text(
-                  'Изменить текущий день',
-                  style: TextStyle(
-                      fontSize: 20.0
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        onTap: () {
-          setState(() {
-            _changeDayTapped = !_changeDayTapped;
-            if (_changeDayTapped) {
-              _changeIntervalTapped = false;
-            }
-          });
-        },
-      ),
+      MenuPoint(
+          'Изменить текущий день', () {
+        setState(() {
+          _changeDayTapped = !_changeDayTapped;
+          if (_changeDayTapped) {
+            _changeIntervalTapped = false;
+          }
+        });
+      })
     ];
     if (_changeDayTapped) {
       list.add(Container(
@@ -95,41 +72,15 @@ class _SettingsPageState extends State<SettingsPage>{
         ),
       ));
     }
-    list.add(GestureDetector(
-      child: Container(
-        decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                color: Color(0x20000000),
-              ),
-              bottom: BorderSide(
-                color: Color(0x20000000),
-              ),
-            )
-        ),
-        child: Row(
-          children: [
-            Container(
-              margin: EdgeInsets.all(20.0),
-              child: Text(
-                  'Изменить дневной интервал',
-                  style: TextStyle(
-                      fontSize: 20.0
-                  )
-              ),
-            )
-          ],
-        ),
-      ),
-      onTap: () {
-        setState(() {
-          _changeIntervalTapped = !_changeIntervalTapped;
-          if (_changeIntervalTapped) {
-            _changeDayTapped = false;
-          }
-        });
-      },
-    ));
+    list.add(
+        MenuPoint('Изменить дневной интервал', () {
+          setState(() {
+            _changeIntervalTapped = !_changeIntervalTapped;
+            if (_changeIntervalTapped) {
+              _changeDayTapped = false;
+            }
+          });
+        }));
     if (_changeIntervalTapped) {
       list.add(Container(
         margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
@@ -146,7 +97,10 @@ class _SettingsPageState extends State<SettingsPage>{
                       child: Column(
                         children: [
                           Text(
-                              'Начало дня'
+                              'Начало дня',
+                            style: TextStyle(
+                              color: Colors.blue
+                            ),
                           ),
                           TextFormField(
                             controller: _inputStartHour,
@@ -193,7 +147,10 @@ class _SettingsPageState extends State<SettingsPage>{
                       child: Column(
                         children: [
                           Text(
-                              'Конец дня'
+                              'Конец дня',
+                            style: TextStyle(
+                                color: Colors.blue
+                            ),
                           ),
                           TextFormField(
                             controller: _inputEndHour,
@@ -250,6 +207,7 @@ class _SettingsPageState extends State<SettingsPage>{
                   _changeIntervalTapped = _changeDayTapped = false;
                   setState(() {
                     widget._toTODOListPage();
+                    widget._updateAppBar();
                   });
                 }
                 catch (e) {}
@@ -269,6 +227,11 @@ class _SettingsPageState extends State<SettingsPage>{
         ),
       ));
     }
+    list.add(
+      MenuPoint('О программе', () {
+        Navigator.pushNamed(context, AboutProgramPage.route);
+      })
+    );
     return ListView.builder(
         itemCount: list.length,
         itemBuilder: (context, pos) => list[pos]);
@@ -276,13 +239,13 @@ class _SettingsPageState extends State<SettingsPage>{
 
   @override
   void dispose() {
-    print('dispose SettingsPage');
+    log('dispose SettingsPage');
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    print('init SettingsPage');
+    log('init SettingsPage');
   }
 }

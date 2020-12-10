@@ -1,3 +1,4 @@
+import 'package:case_planner/Pages/AboutProgramPage.dart';
 import 'package:case_planner/Pages/StartWorkPage.dart';
 import 'package:case_planner/Settings/Settings.dart';
 import 'package:case_planner/WorkWithData/AllDeals.dart';
@@ -27,14 +28,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.cyan,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: isInit ? MyHomePage() : StartWorkPage(),
       routes: {
-        MyHomePage.route: (context) => MyHomePage()
+        MyHomePage.route: (context) => MyHomePage(),
+        AboutProgramPage.route: (context) => AboutProgramPage(),
       },
     );
   }

@@ -5,7 +5,7 @@ import 'package:case_planner/WorkWithData/Deal.dart';
 import 'package:case_planner/WorkWithData/TODOList.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:developer' as developer;
 import 'DateTimeUtility.dart';
 
 class ClockFace {
@@ -24,8 +24,6 @@ class ClockFace {
   static Offset selectedPoint = Offset(0, 0);
   static List<Offset> _selectedPoints = List();
   static bool _selected = false;
-  ///TODO: remove this shit
-  static TimeOfDay currentTime = TimeOfDay(hour: 0, minute: 0);
   static double _borderDist = 25.0;
 
   static void initClockFace() {
@@ -89,6 +87,7 @@ class ClockFace {
           _center.y + r(phi) * sin(phi)
       ));
     }
+    developer.log('all points on clockface updated');
   }
 
   static void updateHourLabels() {
@@ -162,7 +161,6 @@ class ClockFace {
     while (phi >= _phi0 - 4 * pi) {
       if ((magn - r(phi)).abs() < _borderDist) {
         double minutes = (_phi0 - phi) / _anglePerMinute;
-        print(minutes);
         TimeOfDay diff = DateTimeUtility.fromMinutes(minutes.floor());
         TimeOfDay tod = TimeOfDay.fromDateTime(
             Settings.endDay.subtract(Duration(
@@ -170,7 +168,6 @@ class ClockFace {
                 minutes: diff.minute
             ))
         );
-        currentTime = tod;
         for (Deal deal in TODOList.todoList) {
           if (DateTimeUtility.isTimeBetween(
               tod, TimeOfDay.fromDateTime(deal.start),

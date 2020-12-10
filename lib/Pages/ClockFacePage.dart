@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'file:///D:/CasePlanner/case_planner/lib/HelperComponents/DealContainer.dart';
@@ -91,13 +92,13 @@ class _ClockFacePageState extends State<ClockFacePage> {
   @override
   void dispose() {
     ClockFace.handleTap(Offset(0, 0));
-    print('dispose ClockFacePage');
+    log('dispose ClockFacePage');
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    print('init ClockFacePage');
+    log('init ClockFacePage');
   }
 }

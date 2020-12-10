@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:case_planner/Settings/Settings.dart';
 import 'file:///D:/CasePlanner/case_planner/lib/HelperComponents/InputDateTimeField.dart';
 import 'package:case_planner/WorkWithData/AllDeals.dart';
@@ -11,7 +13,6 @@ import 'package:flutter/widgets.dart';
 
 class AddDealPage extends StatefulWidget {
   final String title = 'Планировщик дел';
-  static const String route = '/addNote';
   final void Function() _toTODOListPage;
 
   AddDealPage(this._toTODOListPage);
@@ -23,11 +24,11 @@ class AddDealPage extends StatefulWidget {
 class _AddDealPageState extends State<AddDealPage> {
   TextEditingController _inputDeal = TextEditingController();
 
-
   DateTime startDate;
   TimeOfDay startTime;
   DateTime endDate;
   TimeOfDay endTime;
+
   String errorMessage = '';
 
   DateTime _addDateAndTime(DateTime dt, TimeOfDay tod) {
@@ -39,9 +40,9 @@ class _AddDealPageState extends State<AddDealPage> {
   @override
   Widget build(BuildContext context) {
     if (startDate == null) {
-      startDate = Settings.startDay;
+      startDate = Settings.minimStartDay;
       startTime = DateTimeUtility.timeFromHour(Settings.startDayHour);
-      endDate = Settings.endDay;
+      endDate = Settings.minimEndDay;
       endTime = DateTimeUtility.timeFromHour(Settings.endDayHour);
     }
     return ListView(
@@ -165,7 +166,7 @@ class _AddDealPageState extends State<AddDealPage> {
 
   @override
   void dispose() {
-    print('dispose AddDealPage');
+    log('dispose AddDealPage');
     Settings.inputStartDate = startDate;
     Settings.inputEndDate = endDate;
     Settings.inputStartTime = startTime;
@@ -177,7 +178,7 @@ class _AddDealPageState extends State<AddDealPage> {
   @override
   void initState() {
     super.initState();
-    print('init AddDealPage');
+    log('init AddDealPage');
     startDate = Settings.inputStartDate;
     endDate = Settings.inputEndDate;
     startTime = Settings.inputStartTime;

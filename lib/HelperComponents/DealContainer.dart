@@ -24,7 +24,7 @@ class _DealContainerState extends State<DealContainer> {
         padding: EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(25.0)),
-          color: Color(0xF0EAEAEA),
+          color: Color(0xB0EAEAEA),
         ),
         child: Column(
           children: [

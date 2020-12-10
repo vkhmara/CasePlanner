@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:case_planner/WorkWithData/AllDeals.dart';
 import 'package:case_planner/WorkWithData/ClockFace.dart';
 import 'package:case_planner/WorkWithData/TODOList.dart';
@@ -108,13 +110,13 @@ class _TODOListPageState extends State<TODOListPage> {
 
   @override
   void dispose() {
-    print('dispose TODOListPage');
+    log('dispose TODOListPage');
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    print('init TODOListPage');
+    log('init TODOListPage');
   }
 }

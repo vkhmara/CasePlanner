@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:case_planner/Settings/Settings.dart';
 
 import 'DateTimeUtility.dart';
@@ -15,8 +17,8 @@ class AllDeals {
   }
 
   static Future<void> addDeal(Deal note) async {
-    await DatabaseManager.addDeal(note);
-    _allDeals.add(note);
+   _allDeals.add(note);
+    log('new deal was added');
   }
 
   static Future<bool> editDeal(Deal oldDeal, Deal newDeal) async {
@@ -29,18 +31,18 @@ class AllDeals {
       return false;
     }
     _allDeals.add(newDeal);
-    await DatabaseManager.editDeal(oldDeal, newDeal);
+    log('deal was edited');
     return true;
   }
 
   static Future<void> deleteDeal(Deal deal) async {
-    await DatabaseManager.deleteDeal(deal);
     _allDeals.remove(deal);
+    log('deal was deleted');
   }
 
   static Future<void> deleteDealAt(int pos) async {
-    await DatabaseManager.deleteDeal(_allDeals[pos]);
     _allDeals.removeAt(pos);
+    log('deal was deleted');
   }
 
   static bool isDealCompatible(Deal deal) {

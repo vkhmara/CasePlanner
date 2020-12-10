@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:case_planner/Settings/Settings.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -23,7 +24,7 @@ class DateTimePicker extends StatelessWidget {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: DateTime.now(),
+        firstDate: selectedDate,
         lastDate: new DateTime(2101));
     if (picked != null) selectDate(picked);
   }
@@ -89,7 +90,7 @@ class DatePicker extends StatelessWidget {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: DateTime.now(),
+        firstDate: Settings.minimStartDay,
         lastDate: new DateTime(2101));
     if (picked != null) selectDate(picked);
   }

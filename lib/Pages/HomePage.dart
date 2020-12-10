@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:case_planner/Pages/AddDealPage.dart';
 import 'package:case_planner/Settings/Settings.dart';
+import 'package:case_planner/WorkWithData/AllDeals.dart';
+import 'package:case_planner/WorkWithData/DatabaseManager.dart';
 import 'package:case_planner/WorkWithData/DateTimeUtility.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -108,18 +112,19 @@ class _MyHomePageState extends State<MyHomePage> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    print('initState HomePage');
+    log('initState HomePage');
   }
 
   @override
   void dispose() {
-    print('dispose HomePage');
+    log('dispose HomePage');
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    DatabaseManager.updateDB(AllDeals.allDeals);
     super.dispose();
   }
 }

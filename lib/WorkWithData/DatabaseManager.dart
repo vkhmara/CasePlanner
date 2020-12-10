@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'Deal.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -25,6 +27,7 @@ class DatabaseManager {
           done BIT
           )""");
         });
+    log('database init');
   }
 
   static Future<void> addDeal(Deal deal) async {
@@ -33,25 +36,12 @@ class DatabaseManager {
         \"${Deal.dateTimeToString(deal.end)}\", ${deal.done ? 1 : 0})""");
   }
 
-  static Future<void> deleteDeal(Deal deal) async {
-    await _db.execute("DELETE FROM Deals WHERE start=\"${Deal.dateTimeToString(
-        deal.start)}\"");
-  }
-
-  static Future<void> editDeal(Deal oldDeal, Deal newDeal) async {
-    await _db.execute("""UPDATE Deals
-    SET deal=\"${newDeal.deal}\",
-    start=\"${Deal.dateTimeToString(newDeal.start)}\",
-    end=\"${Deal.dateTimeToString(newDeal.end)}\",
-    done=${newDeal.done ? 1 : 0}
-    WHERE start = \"${Deal.dateTimeToString(oldDeal.start)}\"""");
-  }
-
   static Future<void> updateDB(List<Deal> list) async {
     await _db.execute("DELETE FROM Deals");
     for (Deal deal in list) {
       addDeal(deal);
     }
+    log('database updated in full');
   }
 
   static Future<List<Deal>> downloadAll() async {

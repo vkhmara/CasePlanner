@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:case_planner/Pages/HomePage.dart';
 import 'package:case_planner/Settings/Settings.dart';
 import 'package:case_planner/WorkWithData/AllDeals.dart';
@@ -22,7 +24,20 @@ class _StartWorkPageState extends State<StartWorkPage> {
   bool _rightEndDay = true;
 
   @override
+  void initState() {
+    super.initState();
+    log('init StartWorkPage');
+  }
+
+  @override
+  void dispose() {
+    log('dispose StartWorkPage');
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     if (_screenSize == null) {
       _screenSize = MediaQuery
           .of(context)

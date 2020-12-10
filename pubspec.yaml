@@ -53,6 +53,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/Alice-Regular.ttf
+    - images/
   fonts:
     - family: Alice
       fonts:
