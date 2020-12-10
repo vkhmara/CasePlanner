@@ -1,3 +1,4 @@
+import 'package:case_planner/WorkWithData/AllDeals.dart';
 import 'package:case_planner/WorkWithData/DateTimeUtility.dart';
 import 'package:case_planner/WorkWithData/Deal.dart';
 import 'package:case_planner/WorkWithData/TODOList.dart';
@@ -49,7 +50,8 @@ class _DealContainerState extends State<DealContainer> {
                         if (widget.isImmutable) {
                           return;
                         }
-                        await TODOList.switchDoneAt(widget.dealPos);
+                        await AllDeals.switchDone(TODOList.at(widget.dealPos));
+                        TODOList.switchDoneAt(widget.dealPos);
                         setState(() {
                           deal.done = !deal.done;
                         });
@@ -110,11 +112,11 @@ class _DealContainerState extends State<DealContainer> {
               ),
               Container(
                 child: Checkbox(
-                  onChanged: (b) async {
+                  onChanged: (b) {
                     if (widget.isImmutable) {
                       return;
                     }
-                    await TODOList.switchDoneAt(widget.dealPos);
+                    TODOList.switchDoneAt(widget.dealPos);
                     setState(() {
                       deal.done = !deal.done;
                     });

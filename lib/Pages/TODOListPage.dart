@@ -6,7 +6,7 @@ import 'package:case_planner/WorkWithData/TODOList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../HelperComponents/DealContainer.dart';
+import 'package:case_planner/HelperComponents/DealContainer.dart';
 
 
 class TODOListPage extends StatefulWidget {
@@ -90,12 +90,12 @@ class _TODOListPageState extends State<TODOListPage> {
                               ),
                             );
                           }).
-                      then((toDelete) {
+                      then((toDelete) async {
                         if (toDelete == null || !toDelete) {
                           return;
                         }
+                        await AllDeals.deleteDeal(TODOList.at(pos));
                         setState(() {
-                          AllDeals.deleteDeal(TODOList.at(pos));
                           TODOList.deleteDealAt(pos);
                           ClockFace.updateDealPoints();
                         });

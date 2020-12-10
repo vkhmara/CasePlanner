@@ -6,7 +6,7 @@ import 'package:case_planner/WorkWithData/ClockFace.dart';
 import 'package:case_planner/WorkWithData/DatabaseManager.dart';
 import 'package:flutter/material.dart';
 
-import 'Pages/HomePage.dart';
+import 'Pages/MainPage.dart';
 import 'WorkWithData/TODOList.dart';
 
 void main() async {
@@ -32,9 +32,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.cyan,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: isInit ? MyHomePage() : StartWorkPage(),
+      home: isInit ? MainPage() : StartWorkPage(),
       routes: {
-        MyHomePage.route: (context) => MyHomePage(),
+        MainPage.route: (context) => MainPage(),
         AboutProgramPage.route: (context) => AboutProgramPage(),
       },
     );

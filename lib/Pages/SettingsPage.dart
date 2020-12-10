@@ -44,7 +44,12 @@ class _SettingsPageState extends State<SettingsPage>{
     ];
     if (_changeDayTapped) {
       list.add(Container(
-        margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 10.0),
+        margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
+        padding: EdgeInsets.all(5.0),
+        decoration: BoxDecoration(
+          color: Color(0x90FFFFFF),
+          borderRadius: BorderRadius.circular(5.0)
+        ),
         child: Column(
           children: [
             DatePicker(
@@ -56,17 +61,20 @@ class _SettingsPageState extends State<SettingsPage>{
                 });
               },
             ),
-            RaisedButton(
-              child: Text('Применить'),
-              color: Color(0x00000000),
-              onPressed: () async {
-                Settings.changeCurrentDay(date);
-                _changeIntervalTapped = _changeDayTapped = false;
-                setState(() {
-                  widget._toTODOListPage();
-                  widget._updateAppBar();
-                });
-              },
+            Container(
+              margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 8.0),
+              child: RaisedButton(
+                child: Text('Применить'),
+                color: Color(0x00000000),
+                onPressed: () async {
+                  Settings.changeCurrentDay(date);
+                  _changeIntervalTapped = _changeDayTapped = false;
+                  setState(() {
+                    widget._toTODOListPage();
+                    widget._updateAppBar();
+                  });
+                },
+              ),
             ),
           ],
         ),
@@ -83,23 +91,28 @@ class _SettingsPageState extends State<SettingsPage>{
         }));
     if (_changeIntervalTapped) {
       list.add(Container(
-        margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
+        margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
+          color: Color(0x90FFFFFF),
+        ),
         child: Column(
           children: [
             Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     SizedBox(
-                      width: _screenSize.width / 2 - 30,
+                      width: _screenSize.width / 2 - 50,
                       height: 120,
                       child: Column(
                         children: [
                           Text(
                               'Начало дня',
                             style: TextStyle(
-                              color: Colors.blue
+                              color: Colors.blue,
+                              fontSize: 15.0,
                             ),
                           ),
                           TextFormField(
@@ -142,14 +155,15 @@ class _SettingsPageState extends State<SettingsPage>{
                       ),
                     ),
                     SizedBox(
-                      width: _screenSize.width / 2 - 30,
+                      width: _screenSize.width / 2 - 50,
                       height: 120,
                       child: Column(
                         children: [
                           Text(
                               'Конец дня',
                             style: TextStyle(
-                                color: Colors.blue
+                                color: Colors.blue,
+                              fontSize: 15.0,
                             ),
                           ),
                           TextFormField(
@@ -194,35 +208,41 @@ class _SettingsPageState extends State<SettingsPage>{
                   ],
                 )
             ),
-            RaisedButton(
-              child: Text('Применить'),
-              color: Color(0x00000000),
-              onPressed: () async {
-                try {
-                  int startDayHour = int.parse(_inputStartHour.text);
-                  int endDayHour = int.parse(_inputEndHour.text);
-                  assert(0 <= startDayHour && startDayHour <= 23 &&
-                      0 <= endDayHour && endDayHour <= 23);
-                  Settings.changeDayInterval(startDayHour, endDayHour);
-                  _changeIntervalTapped = _changeDayTapped = false;
-                  setState(() {
-                    widget._toTODOListPage();
-                    widget._updateAppBar();
-                  });
-                }
-                catch (e) {}
-              },
+            Container(
+              margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
+              child: RaisedButton(
+                child: Text('Применить'),
+                color: Color(0x00000000),
+                onPressed: () async {
+                  try {
+                    int startDayHour = int.parse(_inputStartHour.text);
+                    int endDayHour = int.parse(_inputEndHour.text);
+                    assert(0 <= startDayHour && startDayHour <= 23 &&
+                        0 <= endDayHour && endDayHour <= 23);
+                    Settings.changeDayInterval(startDayHour, endDayHour);
+                    _changeIntervalTapped = _changeDayTapped = false;
+                    setState(() {
+                      widget._toTODOListPage();
+                      widget._updateAppBar();
+                    });
+                  }
+                  catch (e) {}
+                },
+              ),
             ),
           ],
         ),
       ));
       list.add(Container(
         alignment: Alignment.center,
-        child: Text(
-          'ВНИМАНИЕ: НЕКОТОРЫЕ ЗАПИСИ МОГУТ ПРОПАСТЬ',
-          style: TextStyle(
-            fontSize: 13.0,
-            color: Color(0x7AA00000)
+        child: Container(
+          margin: EdgeInsets.all(5.0),
+          child: Text(
+            'ВНИМАНИЕ: НЕКОТОРЫЕ ЗАПИСИ МОГУТ ПРОПАСТЬ',
+            style: TextStyle(
+              fontSize: 13.0,
+              color: Color(0xCAF00000)
+            ),
           ),
         ),
       ));

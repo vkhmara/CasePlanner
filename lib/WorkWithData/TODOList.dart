@@ -36,18 +36,18 @@ class TODOList {
     }
   }
 
-  static Future<bool> switchDoneAt(int pos) async {
+  static bool switchDoneAt(int pos) {
     bool done = !_todoList[pos].done;
-    await editDealAt(pos, Deal(
-      deal: _todoList[pos].deal,
-      start: _todoList[pos].start,
-      end: _todoList[pos].end,
-      done: done
+    editDealAt(pos, Deal(
+        deal: _todoList[pos].deal,
+        start: _todoList[pos].start,
+        end: _todoList[pos].end,
+        done: done
     ));
     return done;
   }
 
-  static void updateList() async {
+  static void updateList() {
     _todoList = AllDeals.dealsOnDay()
       ..sort(_compare);
   }

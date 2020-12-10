@@ -13,16 +13,16 @@ import 'SettingsPage.dart';
 import 'TODOListPage.dart';
 import 'ClockFacePage.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+class MainPage extends StatefulWidget {
+  MainPage({Key key}) : super(key: key);
 
   static const String route = '/homepage';
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MainPageState extends State<MainPage> {
   String title = 'Текущий день ' + DateTimeUtility.dateAsString(Settings.startDay);
 
   @override
@@ -112,12 +112,12 @@ class _MyHomePageState extends State<MyHomePage> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    log('initState HomePage');
+    log('initState MainPage');
   }
 
   @override
   void dispose() {
-    log('dispose HomePage');
+    log('dispose MainPage');
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,

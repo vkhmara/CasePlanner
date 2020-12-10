@@ -30,10 +30,27 @@ class DatabaseManager {
     log('database init');
   }
 
+  static Future<void> deleteDeal(Deal deal) async {
+    await _db.execute("DELETE FROM Deals WHERE start=\"${Deal.dateTimeToString(
+        deal.start)}\"");
+    log('database delete');
+  }
+
+  static Future<void> editDeal(Deal oldDeal, Deal newDeal) async {
+    await _db.execute("""UPDATE Deals
+    SET deal=\"${newDeal.deal}\",
+    start=\"${Deal.dateTimeToString(newDeal.start)}\",
+    end=\"${Deal.dateTimeToString(newDeal.end)}\",
+    done=${newDeal.done ? 1 : 0}
+    WHERE start = \"${Deal.dateTimeToString(oldDeal.start)}\"""");
+    log('database edit');
+  }
+
   static Future<void> addDeal(Deal deal) async {
     await _db.execute("""INSERT INTO Deals (deal, start, end, done) VALUES (
         \"${deal.deal}\", \"${Deal.dateTimeToString(deal.start)}\",
         \"${Deal.dateTimeToString(deal.end)}\", ${deal.done ? 1 : 0})""");
+    log('database add');
   }
 
   static Future<void> updateDB(List<Deal> list) async {

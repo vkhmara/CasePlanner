@@ -1,13 +1,13 @@
 import 'dart:developer';
 import 'dart:ui';
 
-import 'file:///D:/CasePlanner/case_planner/lib/HelperComponents/DealContainer.dart';
+import 'package:case_planner/HelperComponents/DealContainer.dart';
 import 'package:case_planner/WorkWithData/ClockFace.dart';
 import 'package:case_planner/WorkWithData/Deal.dart';
 import 'package:case_planner/WorkWithData/TODOList.dart';
 import 'package:flutter/material.dart';
 
-import '../HelperComponents/Painters.dart';
+import 'package:case_planner/HelperComponents/Painters.dart';
 
 class ClockFacePage extends StatefulWidget {
 

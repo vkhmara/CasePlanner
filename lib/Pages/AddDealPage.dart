@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:case_planner/Settings/Settings.dart';
-import 'file:///D:/CasePlanner/case_planner/lib/HelperComponents/InputDateTimeField.dart';
+import 'package:case_planner/HelperComponents/InputDateTimeField.dart';
 import 'package:case_planner/WorkWithData/AllDeals.dart';
 import 'package:case_planner/WorkWithData/Deal.dart';
 import 'package:case_planner/WorkWithData/TODOList.dart';

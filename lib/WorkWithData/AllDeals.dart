@@ -17,12 +17,13 @@ class AllDeals {
   }
 
   static Future<void> addDeal(Deal note) async {
-   _allDeals.add(note);
+    await DatabaseManager.addDeal(note);
+    _allDeals.add(note);
     log('new deal was added');
   }
 
   static Future<bool> editDeal(Deal oldDeal, Deal newDeal) async {
-    if (!_allDeals.contains(oldDeal)|| !newDeal.validate()) {
+    if (!_allDeals.contains(oldDeal) || !newDeal.validate()) {
       return false;
     }
     _allDeals.remove(oldDeal);
@@ -31,16 +32,19 @@ class AllDeals {
       return false;
     }
     _allDeals.add(newDeal);
+    await DatabaseManager.editDeal(oldDeal, newDeal);
     log('deal was edited');
     return true;
   }
 
   static Future<void> deleteDeal(Deal deal) async {
+    await DatabaseManager.deleteDeal(deal);
     _allDeals.remove(deal);
     log('deal was deleted');
   }
 
   static Future<void> deleteDealAt(int pos) async {
+    await DatabaseManager.deleteDeal(_allDeals[pos]);
     _allDeals.removeAt(pos);
     log('deal was deleted');
   }
@@ -57,6 +61,16 @@ class AllDeals {
     DateTimeUtility.isLessOrEqual(Settings.startDay, element.start) &&
         DateTimeUtility.isLessOrEqual(element.start, Settings.endDay))
         .toList();
+  }
+
+  static Future<void> switchDone(Deal deal) async {
+    bool done = !_allDeals[_allDeals.indexOf(deal)].done;
+    await editDeal(deal, Deal(
+        deal: deal.deal,
+        start: deal.start,
+        end: deal.end,
+        done: done
+    ));
   }
 
   static void changeDayInterval() {

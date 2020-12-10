@@ -66,7 +66,7 @@ class AboutProgramPage extends StatelessWidget {
             ),
             SizedBox(height: 20.0,),
             Text(
-              '3) Чтобы перейти в визуальный режим, '
+              '3) Чтобы открыть визуальный режим, '
                   'перейдите во вкладку, помеченную циферблатом',
               style: TextStyle(fontSize: 18.0),
             ),

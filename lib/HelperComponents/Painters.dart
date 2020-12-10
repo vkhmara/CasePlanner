@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../Settings/Settings.dart';
-import '../WorkWithData/ClockFace.dart';
+import 'package:case_planner/Settings/Settings.dart';
+import 'package:case_planner/WorkWithData/ClockFace.dart';
 
 class PaintBackground extends CustomPainter {
   final Paint _clockfaceLinePaint = Paint()

@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:case_planner/Pages/HomePage.dart';
+import 'package:case_planner/Pages/MainPage.dart';
 import 'package:case_planner/Settings/Settings.dart';
 import 'package:case_planner/WorkWithData/AllDeals.dart';
 import 'package:case_planner/WorkWithData/ClockFace.dart';
@@ -197,7 +197,7 @@ class _StartWorkPageState extends State<StartWorkPage> {
                       await AllDeals.initList();
                       TODOList.initList();
                       ClockFace.initClockFace();
-                      Navigator.pushReplacementNamed(context, MyHomePage.route);
+                      Navigator.pushReplacementNamed(context, MainPage.route);
                     }
                     catch (e) {
 
