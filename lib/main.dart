@@ -5,7 +5,6 @@ import 'package:case_planner/WorkWithData/AllDeals.dart';
 import 'package:case_planner/WorkWithData/ClockFace.dart';
 import 'package:case_planner/WorkWithData/DatabaseManager.dart';
 import 'package:flutter/material.dart';
-
 import 'Pages/MainPage.dart';
 import 'WorkWithData/TODOList.dart';
 

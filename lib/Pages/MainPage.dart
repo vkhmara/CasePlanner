@@ -124,7 +124,6 @@ class _MainPageState extends State<MainPage> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    DatabaseManager.updateDB(AllDeals.allDeals);
     super.dispose();
   }
 }

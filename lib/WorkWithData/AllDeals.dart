@@ -13,7 +13,9 @@ class AllDeals {
   static Future<void> initList() async {
     _allDeals = await DatabaseManager.downloadAll();
     _allDeals.removeWhere((element) => !element.validate());
-    DatabaseManager.updateDB(_allDeals);
+    log('start updating database');
+    await DatabaseManager.updateDB(_allDeals);
+    log('end updating database');
   }
 
   static Future<void> addDeal(Deal note) async {
@@ -61,16 +63,6 @@ class AllDeals {
     DateTimeUtility.isLessOrEqual(Settings.startDay, element.start) &&
         DateTimeUtility.isLessOrEqual(element.start, Settings.endDay))
         .toList();
-  }
-
-  static Future<void> switchDone(Deal deal) async {
-    bool done = !_allDeals[_allDeals.indexOf(deal)].done;
-    await editDeal(deal, Deal(
-        deal: deal.deal,
-        start: deal.start,
-        end: deal.end,
-        done: done
-    ));
   }
 
   static void changeDayInterval() {

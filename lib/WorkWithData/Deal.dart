@@ -12,6 +12,12 @@ class Deal {
 
   Deal({this.deal, this.start, this.end, this.done});
 
+  Deal.fromDeal(Deal deal):
+      this.deal = deal.deal,
+      this.start = deal.start,
+      this.end = deal.end,
+      this.done = deal.done;
+
   Map<String, dynamic> toJson() =>
       {
         "note": deal,

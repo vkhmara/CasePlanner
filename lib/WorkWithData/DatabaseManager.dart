@@ -17,7 +17,7 @@ class DatabaseManager {
     String dir = await getDatabasesPath();
     String path = dir + '/Database.db';
     _db = await openDatabase(path, version: 1,
-        onOpen: (db) {},
+        onOpen: (db) async {},
         onCreate: (Database db, int version) async {
           await db.execute("""CREATE TABLE IF NOT EXISTS Deals (
           id INT AUTO_INCREMENT PRIMARY KEY,
@@ -56,9 +56,8 @@ class DatabaseManager {
   static Future<void> updateDB(List<Deal> list) async {
     await _db.execute("DELETE FROM Deals");
     for (Deal deal in list) {
-      addDeal(deal);
+      await addDeal(deal);
     }
-    log('database updated in full');
   }
 
   static Future<List<Deal>> downloadAll() async {

@@ -7,7 +7,7 @@ class TODOList {
 
   static List<Deal> _todoList = new List();
 
-  static void initList() async {
+  static void initList() {
     updateList();
   }
 
@@ -30,10 +30,8 @@ class TODOList {
     (DateTimeUtility.isLessOrEqual(deal1.start, deal2.start) ? 0 : 1);
   }
 
-  static Future<void> editDealAt(int pos, Deal newDeal) async {
-    if (await AllDeals.editDeal(todoList[pos], newDeal)) {
-      todoList[pos] = newDeal;
-    }
+  static void editDealAt(int pos, Deal newDeal) {
+    todoList[pos] = newDeal;
   }
 
   static bool switchDoneAt(int pos) {
