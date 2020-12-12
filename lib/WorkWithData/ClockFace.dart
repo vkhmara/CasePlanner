@@ -14,6 +14,7 @@ class ClockFace {
   static List<Offset> _dealPoints;
   static List<Offset> _hourLabels;
   static List<OffsetPair> _hatches;
+
   static Size size = Size(350.0, 350.0);
   static double _a = 10.0;
   static double _r0 = 150.0;
@@ -194,18 +195,6 @@ class ClockFace {
 
   static List<Offset> get selectedPoints =>
       _selected ? _selectedPoints : List();
-
-  static set r0(double value) {
-    _r0 = value;
-    changeDay();
-    changeDayInterval();
-  }
-
-  static set a(double value) {
-    _a = value;
-    changeDay();
-    changeDayInterval();
-  }
 
   static List<OffsetPair> get hatches => _hatches;
 

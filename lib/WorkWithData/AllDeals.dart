@@ -18,9 +18,9 @@ class AllDeals {
     log('end updating database');
   }
 
-  static Future<void> addDeal(Deal note) async {
-    await DatabaseManager.addDeal(note);
-    _allDeals.add(note);
+  static Future<void> addDeal(Deal deal) async {
+    await DatabaseManager.addDeal(deal);
+    _allDeals.add(deal);
     log('new deal was added');
   }
 

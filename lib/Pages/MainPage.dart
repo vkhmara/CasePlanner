@@ -2,8 +2,6 @@ import 'dart:developer';
 
 import 'package:case_planner/Pages/AddDealPage.dart';
 import 'package:case_planner/Settings/Settings.dart';
-import 'package:case_planner/WorkWithData/AllDeals.dart';
-import 'package:case_planner/WorkWithData/DatabaseManager.dart';
 import 'package:case_planner/WorkWithData/DateTimeUtility.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -41,32 +39,33 @@ class _MainPageState extends State<MainPage> {
       body: Column(
         children: [
           Expanded(
-              child: ((pageNumber) {
-                switch (Settings.currentPage) {
-                  case 0:
-                    return TODOListPage();
-                  case 1:
-                    return AddDealPage(() {
-                      setState(() {
-                        Settings.currentPage = 0;
-                      });
+            child: ((pageNumber) {
+              switch (Settings.currentPage) {
+                case 0:
+                  return TODOListPage();
+                case 1:
+                  return AddDealPage(() {
+                    setState(() {
+                      Settings.currentPage = 0;
                     });
-                  case 2:
-                    return ClockFacePage();
-                  case 3:
-                    return SettingsPage(() {
-                      setState(() {
-                        Settings.currentPage = 0;
-                      });
-                    },() {
-                      setState(() {
-                        title = 'Текущий день ' + DateTimeUtility.dateAsString(Settings.startDay);
-                      });
+                  });
+                case 2:
+                  return ClockFacePage();
+                case 3:
+                  return SettingsPage(() {
+                    setState(() {
+                      Settings.currentPage = 0;
                     });
-                  default:
-                    return null;
-                }
-              })(Settings.currentPage),
+                  }, () {
+                    setState(() {
+                      title = 'Текущий день ' + DateTimeUtility.dateAsString(
+                          Settings.startDay);
+                    });
+                  });
+                default:
+                  return null;
+              }
+            })(Settings.currentPage),
           ),
         ],
       ),
