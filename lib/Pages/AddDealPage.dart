@@ -12,10 +12,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 class AddDealPage extends StatefulWidget {
-  final String title = 'Планировщик дел';
   final void Function() _toTODOListPage;
 
-  AddDealPage(this._toTODOListPage);
+  AddDealPage({@required toTODOListPage}):
+  _toTODOListPage = toTODOListPage;
 
   @override
   _AddDealPageState createState() => _AddDealPageState();
@@ -31,10 +31,35 @@ class _AddDealPageState extends State<AddDealPage> {
 
   String errorMessage = '';
 
-  DateTime _addDateAndTime(DateTime dt, TimeOfDay tod) {
-    return DateTimeUtility
-        .withoutTime(dt)
-        .add(Duration(hours: tod.hour, minutes: tod.minute));
+  void addDeal() async {
+    Deal deal = Deal(
+      deal: _inputDeal.text,
+      start: DateTimeUtility.joinDateAndTime(startDate, startTime),
+      end: DateTimeUtility.joinDateAndTime(endDate, endTime),
+      done: false,
+    );
+
+    if (!deal.validate()) {
+      setState(() {
+        errorMessage =
+        'Неправильно составлена дата или описание дела';
+      });
+      return;
+    }
+
+    if (!AllDeals.isDealCompatible(deal)) {
+      setState(() {
+        errorMessage = 'Несовместно с другими делами';
+      });
+      return;
+    }
+    await AllDeals.addDeal(deal);
+    TODOList.updateList();
+    ClockFace.updateDealPoints();
+    _inputDeal.text = '';
+    widget._toTODOListPage();
+    Settings.currentPage = 0;
+    errorMessage = '';
   }
 
   @override
@@ -128,37 +153,7 @@ class _AddDealPageState extends State<AddDealPage> {
         FloatingActionButton(
             child: Icon(Icons.add),
             backgroundColor: Colors.blueAccent,
-            onPressed: () async {
-              Deal deal = Deal(
-                deal: _inputDeal.text,
-                start: _addDateAndTime(startDate, startTime),
-                end: _addDateAndTime(endDate, endTime),
-                done: false,
-              );
-
-              if (!deal.validate()) {
-                setState(() {
-                  errorMessage =
-                  'Неправильно составлена дата или описание дела';
-                });
-                return;
-              }
-
-              if (!AllDeals.isDealCompatible(deal)) {
-                setState(() {
-                  errorMessage = 'Несовместно с другими делами';
-                });
-                return;
-              }
-              await AllDeals.addDeal(deal);
-              TODOList.updateList();
-              ClockFace.updateDealPoints();
-              _inputDeal.text = '';
-              widget._toTODOListPage();
-              Settings.currentPage = 0;
-              errorMessage = '';
-            }
-
+            onPressed: addDeal,
         ),
       ],
     );

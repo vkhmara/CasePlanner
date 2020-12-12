@@ -117,15 +117,7 @@ class Settings {
 
   static DateTime get endDay => _endDay;
 
-  static DateTime get inputEndDate {
-    return _prefs.containsKey('inputEndDate')?
-    DateTime.fromMillisecondsSinceEpoch(_prefs.getInt('inputEndDate')) :
-    _endDay;
-  }
-
-  static set inputEndDate(DateTime value) {
-    _prefs.setInt('inputEndDate', value.millisecondsSinceEpoch);
-  }
+  static DateTime get minimEndDay => _minimEndDay;
 
   static TimeOfDay get inputStartTime {
     return _prefs.containsKey('inputStartTime') ?
@@ -157,6 +149,16 @@ class Settings {
     _prefs.setInt('inputStartDate', value.millisecondsSinceEpoch);
   }
 
+  static DateTime get inputEndDate {
+    return _prefs.containsKey('inputEndDate')?
+    DateTime.fromMillisecondsSinceEpoch(_prefs.getInt('inputEndDate')) :
+    _endDay;
+  }
+
+  static set inputEndDate(DateTime value) {
+    _prefs.setInt('inputEndDate', value.millisecondsSinceEpoch);
+  }
+
   static String get inputDeal {
     return _prefs.containsKey('inputDeal') ?
     _prefs.getString('inputDeal') : '';
@@ -165,6 +167,4 @@ class Settings {
   static set inputDeal(String value) {
     _prefs.setString('inputDeal', value);
   }
-
-  static DateTime get minimEndDay => _minimEndDay;
 }

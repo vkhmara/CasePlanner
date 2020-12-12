@@ -33,11 +33,6 @@ class PaintBackground extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
 
-    // // To play with paint
-    // ClockFace.a = 10.0;
-    // ClockFace.r0 = 42.0;
-    // // To play with paint
-
     int hour = Settings.startDayHour;
     for (Offset point in ClockFace.hourLabels) {
       final TextPainter textPainter = TextPainter(
@@ -49,6 +44,7 @@ class PaintBackground extends CustomPainter {
       textPainter.paint(canvas, point);
       hour = (hour + 1) % 24;
     }
+
     canvas.drawPoints(PointMode.points, ClockFace.allPoints, _clockfaceLinePaint);
     canvas.drawPoints(PointMode.points, ClockFace.dealPoints, _dealLinePaint);
     for (OffsetPair pair in ClockFace.hatches) {
@@ -61,7 +57,6 @@ class PaintBackground extends CustomPainter {
 
 class PaintForeground extends CustomPainter {
   void paint(Canvas canvas, Size size) {
-
   }
 
   bool shouldRepaint(PaintForeground old) => false;

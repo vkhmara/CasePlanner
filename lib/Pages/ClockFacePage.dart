@@ -10,6 +10,32 @@ import 'package:flutter/material.dart';
 import 'package:case_planner/HelperComponents/Painters.dart';
 
 class ClockFacePage extends StatefulWidget {
+  final Widget emptyDealField = Padding(
+    padding: const EdgeInsets.all(50.0),
+    child: Container(
+      decoration: BoxDecoration(
+          border: Border.all(width: 0.05)
+      ),
+      child: SizedBox(
+        width: 300,
+        height: 120,
+        child: Container(
+          alignment: Alignment.center,
+          child: Text(
+            'Нажмите на красные дуги,\n'
+                'чтобы посмотреть дела.\n'
+                'Если таких нет, то\n'
+                'добавьте дело на день',
+            style: TextStyle(
+                color: Color(0x50000000),
+                fontSize: 16
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    ),
+  );
 
   @override
   _ClockFacePageState createState() => _ClockFacePageState();
@@ -37,32 +63,7 @@ class _ClockFacePageState extends State<ClockFacePage> {
       ));
     }
     else {
-      children.add(Padding(
-        padding: const EdgeInsets.all(50.0),
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(width: 0.05)
-          ),
-          child: SizedBox(
-            width: 300,
-            height: 120,
-            child: Container(
-              alignment: Alignment.center,
-              child: Text(
-                'Нажмите на красные дуги,\n'
-                    'чтобы посмотреть дела.\n'
-                    'Если таких нет, то\n'
-                    'добавьте дело на день',
-                style: TextStyle(
-                  color: Color(0x50000000),
-                  fontSize: 16
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-        ),
-      ));
+      children.add(widget.emptyDealField);
     }
     PaintBackground painting = PaintBackground();
     children.add(Align(
@@ -70,7 +71,7 @@ class _ClockFacePageState extends State<ClockFacePage> {
       child: GestureDetector(
         child: CustomPaint(
           size: Size(350.0, 350.0),
-          painter: PaintBackground(),
+          painter: painting,
           foregroundPainter: PaintForeground(),
         ),
         onTapDown: (details) {

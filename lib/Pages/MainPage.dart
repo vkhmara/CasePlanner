@@ -23,6 +23,37 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   String title = 'Текущий день ' + DateTimeUtility.dateAsString(Settings.startDay);
 
+  Widget getCurrentPage() {
+    switch (Settings.currentPage) {
+      case 0:
+        return TODOListPage();
+      case 1:
+        return AddDealPage(
+            toTODOListPage: () {
+              setState(() {
+                Settings.currentPage = 0;
+              });
+            });
+      case 2:
+        return ClockFacePage();
+      case 3:
+        return SettingsPage(
+            toTODOListPage: () {
+              setState(() {
+                Settings.currentPage = 0;
+              });
+            },
+            updateAppBar: () {
+              setState(() {
+                title = 'Текущий день ' + DateTimeUtility
+                    .dateAsString(Settings.startDay);
+              });
+            });
+      default:
+        return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,33 +70,7 @@ class _MainPageState extends State<MainPage> {
       body: Column(
         children: [
           Expanded(
-            child: ((pageNumber) {
-              switch (Settings.currentPage) {
-                case 0:
-                  return TODOListPage();
-                case 1:
-                  return AddDealPage(() {
-                    setState(() {
-                      Settings.currentPage = 0;
-                    });
-                  });
-                case 2:
-                  return ClockFacePage();
-                case 3:
-                  return SettingsPage(() {
-                    setState(() {
-                      Settings.currentPage = 0;
-                    });
-                  }, () {
-                    setState(() {
-                      title = 'Текущий день ' + DateTimeUtility.dateAsString(
-                          Settings.startDay);
-                    });
-                  });
-                default:
-                  return null;
-              }
-            })(Settings.currentPage),
+            child: getCurrentPage(),
           ),
         ],
       ),

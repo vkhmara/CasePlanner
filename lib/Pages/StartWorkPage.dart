@@ -35,13 +35,48 @@ class _StartWorkPageState extends State<StartWorkPage> {
     super.dispose();
   }
 
+  bool isHoursValid(String hours) {
+    if (hours.length == 0) {
+      return true;
+    }
+    try {
+      int h = int.parse(hours);
+      return 0 <= h && h <= 23;
+    }
+    catch (e) {
+      return false;
+    }
+  }
+
+  void startWork() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences
+          .getInstance();
+
+      int startDayHour = int.parse(_inputStartHour.text);
+      int endDayHour = int.parse(_inputEndHour.text);
+      assert(0 <= startDayHour && startDayHour <= 23 &&
+          0 <= endDayHour && endDayHour <= 23);
+
+      prefs.setInt('startDayHour', startDayHour);
+      prefs.setInt('endDayHour', endDayHour);
+      await Settings.initSettings();
+      await DatabaseManager.initDB();
+      await AllDeals.initList();
+      TODOList.initList();
+      ClockFace.initClockFace();
+      Navigator.pushReplacementNamed(context, MainPage.route);
+    }
+    catch (e) {
+
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
     if (_screenSize == null) {
-      _screenSize = MediaQuery
-          .of(context)
-          .size;
+      _screenSize = MediaQuery.of(context).size;
     }
     return Scaffold(
       appBar: AppBar(
@@ -96,27 +131,16 @@ class _StartWorkPageState extends State<StartWorkPage> {
                             maxLines: 1,
                             keyboardType: TextInputType.number,
                             onChanged: (s) {
-                              try {
-                                if (s.length == 0) {
-                                  setState(() {
-                                    _rightStartDay = true;
-                                  });
-                                  return;
-                                }
-                                int res = int.parse(s);
-                                if (!(0 <= res && res <= 23)) {
-                                  _rightStartDay = false;
-                                }
-                                else {
+                              if (isHoursValid(s)) {
+                                setState(() {
                                   _rightStartDay = true;
-                                }
+                                });
                               }
-                              catch (e) {
-                                _rightStartDay = false;
+                              else {
+                                setState(() {
+                                  _rightStartDay = false;
+                                });
                               }
-                              setState(() {
-
-                              });
                             },
                           ),
                           Text(
@@ -143,27 +167,16 @@ class _StartWorkPageState extends State<StartWorkPage> {
                             maxLines: 1,
                             keyboardType: TextInputType.number,
                             onChanged: (s) {
-                              try {
-                                if (s.length == 0) {
-                                  setState(() {
-                                    _rightEndDay = true;
-                                  });
-                                  return;
-                                }
-                                int res = int.parse(s);
-                                if (!(0 <= res && res <= 23)) {
-                                  _rightEndDay = false;
-                                }
-                                else {
+                              if (isHoursValid(s)) {
+                                setState(() {
                                   _rightEndDay = true;
-                                }
+                                });
                               }
-                              catch (e) {
-                                _rightStartDay = false;
+                              else {
+                                setState(() {
+                                  _rightEndDay = false;
+                                });
                               }
-                              setState(() {
-
-                              });
                             },
                           ),
                           Text(
@@ -181,29 +194,7 @@ class _StartWorkPageState extends State<StartWorkPage> {
             RaisedButton(
                 child: Text('Начать\nработу'),
                 color: Color(0xCFFFFFFF),
-                onPressed: () async {
-                  try {
-                    SharedPreferences prefs = await SharedPreferences
-                        .getInstance();
-
-                    int startDayHour = int.parse(_inputStartHour.text);
-                    int endDayHour = int.parse(_inputEndHour.text);
-                    assert(0 <= startDayHour && startDayHour <= 23 &&
-                        0 <= endDayHour && endDayHour <= 23);
-
-                    prefs.setInt('startDayHour', startDayHour);
-                    prefs.setInt('endDayHour', endDayHour);
-                    await Settings.initSettings();
-                    await DatabaseManager.initDB();
-                    await AllDeals.initList();
-                    TODOList.initList();
-                    ClockFace.initClockFace();
-                    Navigator.pushReplacementNamed(context, MainPage.route);
-                  }
-                  catch (e) {
-
-                  }
-                }
+                onPressed: startWork
             ),
           ],
         ),

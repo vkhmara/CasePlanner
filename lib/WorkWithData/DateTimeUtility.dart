@@ -63,4 +63,10 @@ class DateTimeUtility {
       microseconds: dt.microsecond
     ));
   }
+
+  static DateTime joinDateAndTime(DateTime dt, TimeOfDay tod) {
+    return DateTimeUtility
+        .withoutTime(dt)
+        .add(Duration(hours: tod.hour, minutes: tod.minute));
+  }
 }

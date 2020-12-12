@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:case_planner/WorkWithData/AllDeals.dart';
 import 'package:case_planner/WorkWithData/DateTimeUtility.dart';
 import 'package:case_planner/WorkWithData/Deal.dart';
@@ -18,9 +16,23 @@ class DealContainer extends StatefulWidget {
 }
 
 class _DealContainerState extends State<DealContainer> {
+  Deal deal;
+  void editDeal(bool newDone) async {
+    if (widget.isImmutable) {
+      return;
+    }
+    Deal invDeal = Deal.fromDeal(deal);
+    invDeal.done = newDone;
+    await AllDeals.editDeal(deal, invDeal);
+    TODOList.editDealAt(widget.dealPos, invDeal);
+    setState(() {
+      deal.done = newDone;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    Deal deal = TODOList.at(widget.dealPos);
+     deal = TODOList.at(widget.dealPos);
     if (deal.done) {
       return Container(
         margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -48,18 +60,7 @@ class _DealContainerState extends State<DealContainer> {
                 ),
                 Container(
                     child: Checkbox(
-                      onChanged: (bool newDone) async {
-                        if (widget.isImmutable) {
-                          return;
-                        }
-                        Deal invDeal = Deal.fromDeal(deal);
-                        invDeal.done = newDone;
-                        await AllDeals.editDeal(deal, invDeal);
-                        TODOList.editDealAt(widget.dealPos, invDeal);
-                        setState(() {
-                          deal.done = newDone;
-                        });
-                      },
+                      onChanged: editDeal,
                       value: deal.done,
                     )
                 )
@@ -116,18 +117,7 @@ class _DealContainerState extends State<DealContainer> {
               ),
               Container(
                 child: Checkbox(
-                  onChanged: (bool newDone) async {
-                    if (widget.isImmutable) {
-                      return;
-                    }
-                    Deal invDeal = Deal.fromDeal(deal);
-                    invDeal.done = newDone;
-                    await AllDeals.editDeal(deal, invDeal);
-                    TODOList.editDealAt(widget.dealPos, invDeal);
-                    setState(() {
-                      deal.done = newDone;
-                    });
-                  },
+                  onChanged: editDeal,
                   value: deal.done,
                 )
               )

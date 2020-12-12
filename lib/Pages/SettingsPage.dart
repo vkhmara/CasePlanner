@@ -12,7 +12,9 @@ class SettingsPage extends StatefulWidget{
   final void Function() _toTODOListPage;
   final void Function() _updateAppBar;
 
-  SettingsPage(this._toTODOListPage, this._updateAppBar);
+  SettingsPage({@required toTODOListPage, @required updateAppBar}):
+  _toTODOListPage = toTODOListPage,
+  _updateAppBar = updateAppBar;
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
@@ -26,6 +28,20 @@ class _SettingsPageState extends State<SettingsPage>{
   static Size _screenSize;
   bool _rightStartDay = true;
   bool _rightEndDay = true;
+
+  bool isHoursValid(String hours) {
+    if (hours.length == 0) {
+      return true;
+    }
+    try {
+      int h = int.parse(hours);
+      return 0 <= h && h <= 23;
+    }
+    catch (e) {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_screenSize == null) {
@@ -122,27 +138,16 @@ class _SettingsPageState extends State<SettingsPage>{
                             maxLines: 1,
                             keyboardType: TextInputType.number,
                             onChanged: (s) {
-                              try {
-                                if (s.length == 0) {
-                                  setState(() {
-                                    _rightStartDay = true;
-                                  });
-                                  return;
-                                }
-                                int res = int.parse(s);
-                                if (!(0 <= res && res <= 23)) {
-                                  _rightStartDay = false;
-                                }
-                                else {
+                              if (isHoursValid(s)) {
+                                setState(() {
                                   _rightStartDay = true;
-                                }
+                                });
                               }
-                              catch (e) {
-                                _rightStartDay = false;
+                              else {
+                                setState(() {
+                                  _rightStartDay = false;
+                                });
                               }
-                              setState(() {
-
-                              });
                             },
                           ),
                           Text(
@@ -173,27 +178,16 @@ class _SettingsPageState extends State<SettingsPage>{
                             maxLines: 1,
                             keyboardType: TextInputType.number,
                             onChanged: (s) {
-                              try {
-                                if (s.length == 0) {
-                                  setState(() {
-                                    _rightEndDay = true;
-                                  });
-                                  return;
-                                }
-                                int res = int.parse(s);
-                                if (!(0 <= res && res <= 23)) {
-                                  _rightEndDay = false;
-                                }
-                                else {
+                              if (isHoursValid(s)) {
+                                setState(() {
                                   _rightEndDay = true;
-                                }
+                                });
                               }
-                              catch (e) {
-                                _rightStartDay = false;
+                              else {
+                                setState(() {
+                                  _rightEndDay = false;
+                                });
                               }
-                              setState(() {
-
-                              });
                             },
                           ),
                           Text(
