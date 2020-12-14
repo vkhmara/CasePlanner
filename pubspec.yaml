@@ -54,7 +54,6 @@ flutter:
   assets:
     - fonts/Alice-Regular.ttf
     - images/
-    - dataBaseForTests/Database.db
   fonts:
     - family: Alice
       fonts:
