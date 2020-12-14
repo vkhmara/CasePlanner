@@ -59,9 +59,28 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       appBar: AppBar(
         title: Align(
-          child: Text(
-              title,
-              style: TextStyle(color: Colors.black)
+          child: GestureDetector(
+            child: Text(
+                title,
+                style: TextStyle(color: Colors.black)
+            ),
+            onTap: () {
+              showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: Settings.minimStartDay,
+                  lastDate: DateTime(2100)
+              )
+                  .then((value) {
+                    if (value != null) {
+                      setState(() {
+                        Settings.changeCurrentDay(value);
+                        title = 'Текущий день ' +
+                            DateTimeUtility.dateAsString(Settings.startDay);
+                      });
+                    }
+              });
+            },
           ),
           alignment: Alignment.center,
         ),
